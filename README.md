@@ -10,4 +10,4 @@ CHDynmap
 
 - The documentation for the extension is [here](https://github.com/Hekta/CHDynmap/wiki)
 
-- You cans report bugs or requests [here](https://github.com/Hekta/CHDynmap/issues)
+- You can report bugs or requests [here](https://github.com/Hekta/CHDynmap/issues)
