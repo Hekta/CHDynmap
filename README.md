@@ -8,6 +8,6 @@ CHDynmap
  
 - The last version is compatible with Dynmap 1.9, CommandHelper 3.3.1-2393 and craftbukkit 1.6.2-R1.0
 
-- The documentation is available [here](https://github.com/Hekta/CHDynmap/wiki)
+- The documentation for the extension is [here](https://github.com/Hekta/CHDynmap/wiki)
 
-- You car report bugs or requests [here](https://github.com/Hekta/CHDynmap/issues)
+- You cans report bugs or requests [here](https://github.com/Hekta/CHDynmap/issues)
