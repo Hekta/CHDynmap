@@ -9,7 +9,7 @@ import com.laytonsmith.core.Static;
  * @author Hekta
  */
 public class main {
-		
+
 	@startup
 	public static void onEnable(){
 		if (Static.getServer().getPluginManager().getPlugin("dynmap") == null) {

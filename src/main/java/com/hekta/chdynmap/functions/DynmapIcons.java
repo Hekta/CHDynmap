@@ -174,7 +174,7 @@ public class DynmapIcons {
 		}
 
 		public String docs() {
-			return "void {iconID} Deletes an icon (no effect on builtin icons).";
+			return "void {iconID} Deletes an icon (can't be used on builtin icons).";
 		}
 
 		public Version since() {
@@ -377,7 +377,7 @@ public class DynmapIcons {
 		}
 
 		public String docs() {
-			return "string {iconID} Returns the size of the icon. Size can be one of " + StringUtils.Join(MarkerIcon.MarkerSize.values(), ", ", ", or ", " or ") + ".";
+			return "string {iconID} Returns the size of the icon. Size can be one of 8x8, 16x16, or 32x32.";
 		}
 
 		public Version since() {

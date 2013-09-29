@@ -30,7 +30,11 @@ import com.hekta.chdynmap.events.CHDynmapBindableEvents.CHDynmapWebChatEvent;
  *
  * @author Hekta
  */
-public class CHDynmapEvents {
+public class DynmapEvents {
+
+    public static String docs(){
+        return "Contains events related to the Dynmap plugin";
+    }
 
 	@api
 	public static class dm_player_web_chat extends AbstractEvent {
@@ -38,7 +42,7 @@ public class CHDynmapEvents {
 		public String getName() {
 			return "dm_player_web_chat";
 		}
-		
+
 		public Driver driver() {
 			return Driver.EXTENSION;
 		}
@@ -51,16 +55,16 @@ public class CHDynmapEvents {
 ////			new DynmapWebChatEvent(source, name, message);
 //			return EventBuilder.instantiate(CHDynmapWebChatEvent.class, source, name, message);
 		}
-		
+
 		public boolean modifyEvent(String key, Construct value, BindableEvent event) {
 			return false;
 		}
 
 		public String docs() {
-			return "{name: <macro> | source: <macro>}"
+			return "{name: <macro> | processed: <macro> | source: <macro>}"
 					+ " Fires when a player send a message on the Dynmap."
-					+ " {message: the message the player sent | name: the name of the sender | source: from where the message is sent"
-					+ " {message|reason}"
+					+ " {message: the message the player sent | name: the name of the sender | processed: returns if the event has been handled by a plugin | source: from where the message is sent}"
+					+ " {}"
 					+ " {}";
 		}
 

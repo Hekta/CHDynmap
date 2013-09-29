@@ -80,10 +80,10 @@ public class DynmapPlayerSets {
 	}
 
 	@api
-	public static class dm_create_playerser extends AbstractFunction {
+	public static class dm_create_playerset extends AbstractFunction {
 
 		public String getName() {
-			return "dm_create_playerser";
+			return "dm_create_playerset";
 		}
 
 		public Integer[] numArgs() {
@@ -105,7 +105,7 @@ public class DynmapPlayerSets {
 		public String docs() {
 			return "string {newSetID, [optionArray]} Creates a playerset and returns its ID."
 					+ " ---- The ID must be unique among playersets and must only contain numbers, letters, periods (.) and underscores (_)."
-					+ " The option array is associative and not required, and all its keys are optional"
+					+ " The option array is associative and not required, and all its keys are optional."
 					+ " <li>KEY - DEFAULT - DESCRIPTION - COMMENT</li>"
 					+ " <li>persistent - false - sets if the playerset is persistent - can not be changed later</li>"
 					+ " <li>players - empty array - an array of players the playerset will contain</li>"
@@ -284,7 +284,7 @@ public class DynmapPlayerSets {
 			}
 			Set<String> pList = new HashSet<String>();
 			for (String index : givenPlayers.keySet()) {
-				pList.add(givenPlayers.get(index, t).val());
+				pList.add(Static.getServer().getOfflinePlayer(givenPlayers.get(index, t).val()).getName());
 			}
 			getDynmapPlayerSet(args[0].val(), t).setPlayers(pList);
 			return new CVoid(t);

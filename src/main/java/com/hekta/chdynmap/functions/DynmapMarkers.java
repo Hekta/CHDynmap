@@ -149,7 +149,7 @@ public class DynmapMarkers {
 
 		public String docs() {
 			return "string {setID, [optionArray]} Creates a marker and returns its ID."
-					+ " ---- The option array is associative and not required, and all its keys are optional"
+					+ " ---- The option array is associative and not required, and all its keys are optional."
 					+ " <li>KEY - DEFAULT - DESCRIPTION - COMMENT</li>"
 					+ " <li>center - world spawn - the center of the marker - only for circle markers, world is ignored</li>"
 					+ " <li>corners - world spawn - the corners of the marker - only for area or polyline markers, world is ignored (and also y for area markers)</li>"
@@ -159,7 +159,7 @@ public class DynmapMarkers {
 					+ " <li>label_is_html - false - sets if the label is processing as HTML</li>"
 					+ " <li>location - world spawn - the location of the marker - only for icon markers, world is ignored</li>"
 					+ " <li>persistent - false - sets if the label is persistent (saved and reloaded on restart), the markerset must be persistent - can not be changed later</li>"
-					+ " <li>radius - 0 - the radius of the marker - only for circle markers</li>"
+					+ " <li>radius - 0 0 - the radius of the marker - only for circle markers</li>"
 					+ " <li>type - ICON - the type of the marker, can be one of " + StringUtils.Join(CHDynmapMarkerType.values(), ", ", ", or ", " or ") + " - can not be changed later</li>"
 					+ " <li>world - first world - the world of the marker</li>";
 		}
@@ -1441,7 +1441,7 @@ public class DynmapMarkers {
 	public static class dm_set_marker_markerset extends AbstractFunction {
 
 		public String getName() {
-			return "dm_set_marker_label";
+			return "dm_set_marker_markerset";
 		}
 
 		public Integer[] numArgs() {

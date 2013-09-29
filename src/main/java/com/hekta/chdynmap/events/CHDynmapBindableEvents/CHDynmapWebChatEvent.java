@@ -19,23 +19,23 @@ public class CHDynmapWebChatEvent implements BindableEvent {
 	public Object _GetObject() {
 		return wce;
 	}
-	
+
 	public String getMessage() {
 		return wce.getMessage();
 	}
-	
+
 	public String getName() {
 		return wce.getName();
 	}
-	
+
 	public boolean isProcessed() {
 		return wce.isProcessed();
 	}
-	
+
 	public void setProcessed() {
 		wce.setProcessed();
 	}
-	
+
 	public String getSource() {
 		return wce.getSource();
 	}

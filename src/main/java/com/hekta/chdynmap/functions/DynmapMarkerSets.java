@@ -105,7 +105,7 @@ public class DynmapMarkerSets {
 		public String docs() {
 			return "string {newSetID, [optionArray]} Creates a markerset and returns its ID."
 					+ " ---- The ID must be unique among markersets and must only contain numbers, letters, periods (.) and underscores (_)."
-					+ " The option array is associative and not required, and all its keys are optional"
+					+ " The option array is associative and not required, and all its keys are optional."
 					+ " <li>KEY - DEFAULT - DESCRIPTION - COMMENT</li>"
 					+ " <li>allowed_icons - null - an array of icons allowed in the markerset, null to unrestrict - restriction status can not be changed later, only the list of icons allowed could be modified</li>"
 					+ " <li>label - setID - the markerset label</li>"
