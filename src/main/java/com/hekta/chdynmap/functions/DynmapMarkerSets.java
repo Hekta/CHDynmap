@@ -135,15 +135,18 @@ public class DynmapMarkerSets {
 			Set keys = optionArray.keySet();
 			//set optional values
 			//allowed_icons
-			HashSet<MarkerIcon> allowed_icons;
+			HashSet<MarkerIcon> allowedIcons;
 			if (keys.contains("allowed_icons")) {
-				CArray givenAllowed_icons = Static.getArray(optionArray.get("allowed_icons", t), t);
-				allowed_icons = new HashSet<MarkerIcon>();
-				for (String iconIndex : givenAllowed_icons.keySet()) {
-					allowed_icons.add(getDynmapIcon(givenAllowed_icons.get(iconIndex, t).val(), t));
+				CArray givenAllowedIcons = Static.getArray(optionArray.get("allowed_icons", t), t);
+				if (givenAllowedIcons.inAssociativeMode()) {
+					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
+				}
+				allowedIcons = new HashSet<MarkerIcon>();
+				for (Construct icon : givenAllowedIcons.asList()) {
+					allowedIcons.add(getDynmapIcon(icon.val(), t));
 				}
 			} else {
-				allowed_icons = null;
+				allowedIcons = null;
 			}
 			//label
 			String label;
@@ -160,7 +163,7 @@ public class DynmapMarkerSets {
 				persistent = false;
 			}
 			//create marker set
-			MarkerSet set = markerapi.createMarkerSet(setID, label, allowed_icons, persistent);
+			MarkerSet set = markerapi.createMarkerSet(setID, label, allowedIcons, persistent);
 			if (set == null) {
 				throw new ConfigRuntimeException("The markerset creation failed.", ExceptionType.PluginInternalException, t);
 			}

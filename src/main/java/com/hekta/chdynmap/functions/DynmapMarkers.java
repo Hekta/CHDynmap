@@ -263,12 +263,12 @@ public class DynmapMarkers {
 					int size = (int) givenCorners.size();
 					cornersX = new double[size];
 					cornersZ = new double[size];
-					int intIndex;
-					for (String index : givenCorners.keySet()) {
-						cornerLocation = ObjectGenerator.GetGenerator().location(givenCorners.get(index, t), world, t);
-						intIndex = Integer.parseInt(index);
-						cornersX[intIndex] = cornerLocation.getX();
-						cornersZ[intIndex] = cornerLocation.getZ();
+					int cornerCount = 0;
+					for (Construct corner : givenCorners.asList()) {
+						cornerLocation = ObjectGenerator.GetGenerator().location(corner, world, t);
+						cornersX[cornerCount] = cornerLocation.getX();
+						cornersZ[cornerCount] = cornerLocation.getZ();
+						cornerCount++;
 					}
 				} else {
 					cornersX = new double[1] ;
@@ -288,13 +288,13 @@ public class DynmapMarkers {
 					cornersX = new double[size];
 					cornersY = new double[size];
 					cornersZ = new double[size];
-					int intIndex;
-					for (String index : givenCorners.keySet()) {
-						cornerLocation = ObjectGenerator.GetGenerator().location(givenCorners.get(index, t), world, t);
-						intIndex = Integer.parseInt(index);
-						cornersX[intIndex] = cornerLocation.getX();
-						cornersZ[intIndex] = cornerLocation.getY();
-						cornersZ[intIndex] = cornerLocation.getZ();
+					int cornerCount = 0;
+					for (Construct corner : givenCorners.asList()) {
+						cornerLocation = ObjectGenerator.GetGenerator().location(corner, world, t);
+						cornersX[cornerCount] = cornerLocation.getX();
+						cornersZ[cornerCount] = cornerLocation.getY();
+						cornersZ[cornerCount] = cornerLocation.getZ();
+						cornerCount++;
 					}
 				} else {
 					cornersX = new double[1] ;
@@ -547,7 +547,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
 			CircleMarker marker = getDynmapCircleMarker(args[0].val(), args[1].val(), t);
-			return CHDynmapConverters.getLocationArray(marker.getCenterX(), marker.getCenterY(), marker.getCenterZ(), marker.getWorld(), t);
+			return CHDynmapConverters.getLocationArray(marker.getCenterX(), marker.getCenterY(), marker.getCenterZ(), marker.getWorld());
 		}
 	}
 
@@ -630,7 +630,7 @@ public class DynmapMarkers {
 				CArray corners = new CArray(t);
 				String world = marker.getWorld();
 				for (int cornerCount = 0; cornerCount<areaMarker.getCornerCount(); cornerCount++) {
-					corners.push(CHDynmapConverters.getLocationArray(areaMarker.getCornerX(cornerCount), 0, areaMarker.getCornerZ(cornerCount), world, t));
+					corners.push(CHDynmapConverters.getLocationArray(areaMarker.getCornerX(cornerCount), 0, areaMarker.getCornerZ(cornerCount), world));
 				}
 				return corners;
 			} else if (marker instanceof CircleMarker) {
@@ -642,7 +642,7 @@ public class DynmapMarkers {
 				CArray corners = new CArray(t);
 				String world = marker.getWorld();
 				for (int cornerCount = 0; cornerCount<polyLineMarker.getCornerCount(); cornerCount++) {
-					corners.push(CHDynmapConverters.getLocationArray(polyLineMarker.getCornerX(cornerCount), polyLineMarker.getCornerY(cornerCount), polyLineMarker.getCornerZ(cornerCount), world, t));
+					corners.push(CHDynmapConverters.getLocationArray(polyLineMarker.getCornerX(cornerCount), polyLineMarker.getCornerY(cornerCount), polyLineMarker.getCornerZ(cornerCount), world));
 				}
 				return corners;
 			} else {
@@ -695,12 +695,12 @@ public class DynmapMarkers {
 				int size = (int) givenLocations.size();
 				double[] Xs = new double[size];
 				double[] Zs = new double[size];
-				int intIndex;
-				for (String index : givenLocations.keySet()) {
-					location = ObjectGenerator.GetGenerator().location(givenLocations.get(index, t), world, t);
-					intIndex = Integer.parseInt(index);
-					Xs[intIndex] = location.getX();
-					Zs[intIndex] = location.getZ();
+				int cornerCount = 0;
+				for (Construct corner : givenLocations.asList()) {
+					location = ObjectGenerator.GetGenerator().location(corner, world, t);
+					Xs[cornerCount] = location.getX();
+					Zs[cornerCount] = location.getZ();
+					cornerCount++;
 				}
 				((AreaMarker) marker).setCornerLocations(Xs, Zs);
 			} else if (marker instanceof CircleMarker) {
@@ -718,13 +718,13 @@ public class DynmapMarkers {
 				double[] Xs = new double[size];
 				double[] Ys = new double[size];
 				double[] Zs = new double[size];
-				int intIndex;
-				for (String index : givenLocations.keySet()) {
-					location = ObjectGenerator.GetGenerator().location(givenLocations.get(index, t), world, t);
-					intIndex = Integer.parseInt(index);
-					Xs[intIndex] = location.getX();
-					Ys[intIndex] = location.getY();
-					Zs[intIndex] = location.getZ();
+				int cornerCount = 0;
+				for (Construct corner : givenLocations.asList()) {
+					location = ObjectGenerator.GetGenerator().location(corner, world, t);
+					Xs[cornerCount] = location.getX();
+					Ys[cornerCount] = location.getY();
+					Zs[cornerCount] = location.getZ();
+					cornerCount++;
 				}
 				((PolyLineMarker) marker).setCornerLocations(Xs, Ys, Zs);
 			} else {
@@ -1392,7 +1392,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
 			Marker marker = getDynmapIconMarker(args[0].val(), args[1].val(), t);
-			return CHDynmapConverters.getLocationArray(marker.getX(), marker.getY(), marker.getZ(), marker.getWorld(), t);
+			return CHDynmapConverters.getLocationArray(marker.getX(), marker.getY(), marker.getZ(), marker.getWorld());
 		}
 	}
 

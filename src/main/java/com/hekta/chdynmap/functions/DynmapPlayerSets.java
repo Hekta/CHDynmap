@@ -138,8 +138,11 @@ public class DynmapPlayerSets {
 			HashSet<String> players = new HashSet<String>();
 			if (keys.contains("players")) {
 				CArray givenPlayers = Static.getArray(optionArray.get("players", t), t);
-				for (String playerIndex : givenPlayers.keySet()) {
-					players.add(Static.getServer().getOfflinePlayer(givenPlayers.get(playerIndex, t).val()).getName());
+				if (givenPlayers.inAssociativeMode()) {
+					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
+				}
+				for (Construct player : givenPlayers.asList()) {
+					players.add(Static.getServer().getOfflinePlayer(player.val()).getName());
 				}
 			}
 			//persistent
@@ -283,8 +286,8 @@ public class DynmapPlayerSets {
 				throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
 			}
 			Set<String> pList = new HashSet<String>();
-			for (String index : givenPlayers.keySet()) {
-				pList.add(Static.getServer().getOfflinePlayer(givenPlayers.get(index, t).val()).getName());
+			for (Construct player : givenPlayers.asList()) {
+				pList.add(Static.getServer().getOfflinePlayer(player.val()).getName());
 			}
 			getDynmapPlayerSet(args[0].val(), t).setPlayers(pList);
 			return new CVoid(t);
