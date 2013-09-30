@@ -2,12 +2,15 @@ package com.hekta.chdynmap.functions;
 
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.abstraction.MCLocation;
+import com.laytonsmith.abstraction.MCPlayer;
+import com.laytonsmith.abstraction.MCWorld;
 import com.laytonsmith.core.CHVersion;
 import com.laytonsmith.core.constructs.CBoolean;
 import com.laytonsmith.core.constructs.CNull;
 import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.CVoid;
 import com.laytonsmith.core.constructs.Target;
+import com.laytonsmith.core.environments.CommandHelperEnvironment;
 import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
@@ -293,7 +296,14 @@ public class DynmapGeneric {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
-			MCLocation location = ObjectGenerator.GetGenerator().location(args[0], null, t);
+			MCPlayer player = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
+			MCWorld world;
+			if (player == null) {
+				world = null;
+			} else {
+				world = player.getWorld();
+			}
+			MCLocation location = ObjectGenerator.GetGenerator().location(args[0], world, t);
 			dynmapapi.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 			return new CVoid(t);
 		}
@@ -333,9 +343,16 @@ public class DynmapGeneric {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
-			MCLocation location1 = ObjectGenerator.GetGenerator().location(args[0], null, t);
-			MCLocation location2 = ObjectGenerator.GetGenerator().location(args[1], null, t);
-			if (!location1.getWorld().getName().equals(location2.getWorld().getName())) {
+			MCPlayer player = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
+			MCWorld world;
+			if (player == null) {
+				world = null;
+			} else {
+				world = player.getWorld();
+			}
+			MCLocation location1 = ObjectGenerator.GetGenerator().location(args[0], world, t);
+			MCLocation location2 = ObjectGenerator.GetGenerator().location(args[1], world, t);
+			if ((location1.getWorld()) != (location2.getWorld())) {
 				throw new ConfigRuntimeException("Worlds are not the same.", ExceptionType.FormatException, t);
 			}
 			dynmapapi.triggerRenderOfVolume(location1.getWorld().getName(), location1.getBlockX(), location1.getBlockY(), location1.getBlockZ(), location2.getBlockX(), location2.getBlockY(), location2.getBlockZ());

@@ -4,7 +4,6 @@ import java.awt.Color;
 
 import com.laytonsmith.abstraction.Convertor;
 import com.laytonsmith.abstraction.MCColor;
-import com.laytonsmith.abstraction.MCLocation;
 import com.laytonsmith.abstraction.StaticLayer;
 import com.laytonsmith.core.constructs.CArray;
 import com.laytonsmith.core.constructs.Construct;
@@ -33,9 +32,5 @@ public class CHDynmapConverters {
 
 	public static CArray getLocationArray(double x, double y, double z, String worldName, Target t) {
 		return generator.location(convertor.GetLocation(Static.getServer().getWorld(worldName), x, y, z, 0, 0));
-	}
-
-	public static MCLocation getMCLocation(Construct locationArray, String worldName, Target t) {
-		return generator.location(locationArray, Static.getServer().getWorld(worldName), t);
 	}
 }

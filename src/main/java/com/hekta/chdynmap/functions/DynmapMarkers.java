@@ -202,14 +202,13 @@ public class DynmapMarkers {
 				markerID = null;
 			}
 			//world
-			MCWorld mcworld;
+			MCWorld world;
 			if (keys.contains("world")) {
-				mcworld = Static.getServer().getWorld(optionArray.get("world", t).val());
+				world = Static.getServer().getWorld(optionArray.get("world", t).val());
 			} else {
-				mcworld = Static.getServer().getWorlds().get(0);
+				world = Static.getServer().getWorlds().get(0);
 			}
-			MCLocation spawnLocation = mcworld.getSpawnLocation();
-			String worldName = mcworld.getName();
+			MCLocation spawnLocation = world.getSpawnLocation();
 			//label
 			String label;
 			if (keys.contains("label")) {
@@ -238,7 +237,7 @@ public class DynmapMarkers {
 			MCLocation centerLocation;
 			if (type == CHDynmapMarkerType.CIRCLE) {
 				if (keys.contains("center")) {
-					centerLocation = CHDynmapConverters.getMCLocation(optionArray.get("center", t), worldName, t);
+					centerLocation = ObjectGenerator.GetGenerator().location(optionArray.get("center", t), world, t);
 				} else {
 					centerLocation = spawnLocation;
 				}
@@ -266,7 +265,7 @@ public class DynmapMarkers {
 					cornersZ = new double[size];
 					int intIndex;
 					for (String index : givenCorners.keySet()) {
-						cornerLocation = CHDynmapConverters.getMCLocation(givenCorners.get(index, t), worldName, t);
+						cornerLocation = ObjectGenerator.GetGenerator().location(givenCorners.get(index, t), world, t);
 						intIndex = Integer.parseInt(index);
 						cornersX[intIndex] = cornerLocation.getX();
 						cornersZ[intIndex] = cornerLocation.getZ();
@@ -291,7 +290,7 @@ public class DynmapMarkers {
 					cornersZ = new double[size];
 					int intIndex;
 					for (String index : givenCorners.keySet()) {
-						cornerLocation = CHDynmapConverters.getMCLocation(givenCorners.get(index, t), worldName, t);
+						cornerLocation = ObjectGenerator.GetGenerator().location(givenCorners.get(index, t), world, t);
 						intIndex = Integer.parseInt(index);
 						cornersX[intIndex] = cornerLocation.getX();
 						cornersZ[intIndex] = cornerLocation.getY();
@@ -328,7 +327,7 @@ public class DynmapMarkers {
 			MCLocation iconLocation;
 			if (type == CHDynmapMarkerType.ICON) {
 				if (keys.contains("location")) {
-					iconLocation = CHDynmapConverters.getMCLocation(optionArray.get("location", t), worldName, t);
+					iconLocation = ObjectGenerator.GetGenerator().location(optionArray.get("location", t), world, t);
 				} else {
 					iconLocation = spawnLocation;
 				}
@@ -360,16 +359,16 @@ public class DynmapMarkers {
 			GenericMarker marker = null;
 			switch (type) {
 				case AREA:
-					marker = (GenericMarker) set.createAreaMarker(markerID, label, labelIsHTML, worldName, cornersX, cornersZ, isPersistent);
+					marker = (GenericMarker) set.createAreaMarker(markerID, label, labelIsHTML, world.getName(), cornersX, cornersZ, isPersistent);
 					break;
 				case CIRCLE:
-					marker = (GenericMarker) set.createCircleMarker(markerID, label, labelIsHTML, worldName, centerX, centerY, centerZ, radiusX, radiusZ, isPersistent);
+					marker = (GenericMarker) set.createCircleMarker(markerID, label, labelIsHTML, world.getName(), centerX, centerY, centerZ, radiusX, radiusZ, isPersistent);
 					break;
 				case ICON:
-					marker = (GenericMarker) set.createMarker(markerID, label, labelIsHTML, worldName, locationX, locationY, locationZ, icon, isPersistent);
+					marker = (GenericMarker) set.createMarker(markerID, label, labelIsHTML, world.getName(), locationX, locationY, locationZ, icon, isPersistent);
 					break;
 				case POLYLINE:
-					marker = (GenericMarker) set.createPolyLineMarker(markerID, label, labelIsHTML, worldName, cornersX, cornersY, cornersZ, isPersistent);
+					marker = (GenericMarker) set.createPolyLineMarker(markerID, label, labelIsHTML, world.getName(), cornersX, cornersY, cornersZ, isPersistent);
 					break;
 			}
 			if (marker == null) {
@@ -586,7 +585,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
 			CircleMarker marker = getDynmapCircleMarker(args[0].val(), args[1].val(), t);
-			MCLocation location = CHDynmapConverters.getMCLocation(args[2], marker.getWorld(), t);
+			MCLocation location = ObjectGenerator.GetGenerator().location(args[2], Static.getServer().getWorld(marker.getWorld()), t);
 			marker.setCenter(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
 			return new CVoid(t);
 		}
@@ -692,13 +691,13 @@ public class DynmapMarkers {
 					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
 				}
 				MCLocation location;
-				String world = marker.getWorld();
+				MCWorld world = Static.getServer().getWorld(marker.getWorld());
 				int size = (int) givenLocations.size();
 				double[] Xs = new double[size];
 				double[] Zs = new double[size];
 				int intIndex;
 				for (String index : givenLocations.keySet()) {
-					location = CHDynmapConverters.getMCLocation(givenLocations.get(index, t), world, t);
+					location = ObjectGenerator.GetGenerator().location(givenLocations.get(index, t), world, t);
 					intIndex = Integer.parseInt(index);
 					Xs[intIndex] = location.getX();
 					Zs[intIndex] = location.getZ();
@@ -714,14 +713,14 @@ public class DynmapMarkers {
 					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
 				}
 				MCLocation location;
-				String world = marker.getWorld();
+				MCWorld world = Static.getServer().getWorld(marker.getWorld());
 				int size = (int) givenLocations.size();
 				double[] Xs = new double[size];
 				double[] Ys = new double[size];
 				double[] Zs = new double[size];
 				int intIndex;
 				for (String index : givenLocations.keySet()) {
-					location = CHDynmapConverters.getMCLocation(givenLocations.get(index, t), world, t);
+					location = ObjectGenerator.GetGenerator().location(givenLocations.get(index, t), world, t);
 					intIndex = Integer.parseInt(index);
 					Xs[intIndex] = location.getX();
 					Ys[intIndex] = location.getY();
@@ -868,16 +867,16 @@ public class DynmapMarkers {
 			GenericMarker marker = getDynmapMarker(args[0].val(), args[1].val(), t);
 			if (marker instanceof AreaMarker) {
 				AreaMarker areaMarker = (AreaMarker) marker;
-				CArray fill_style = new CArray(t);
-				fill_style.set("color", CHDynmapConverters.getColorArray(areaMarker.getFillColor(), t), t);
-				fill_style.set("opacity", new CDouble(areaMarker.getFillOpacity(), t), t);
-				return fill_style;
+				CArray fillStyle = new CArray(t);
+				fillStyle.set("color", CHDynmapConverters.getColorArray(areaMarker.getFillColor(), t), t);
+				fillStyle.set("opacity", new CDouble(areaMarker.getFillOpacity(), t), t);
+				return fillStyle;
 			} else if (marker instanceof CircleMarker) {
 				CircleMarker circleMarker = (CircleMarker) marker;
-				CArray fill_style = new CArray(t);
-				fill_style.set("color", CHDynmapConverters.getColorArray(circleMarker.getFillColor(), t), t);
-				fill_style.set("opacity", new CDouble(circleMarker.getFillOpacity(), t), t);
-				return fill_style;
+				CArray fillStyle = new CArray(t);
+				fillStyle.set("color", CHDynmapConverters.getColorArray(circleMarker.getFillColor(), t), t);
+				fillStyle.set("opacity", new CDouble(circleMarker.getFillOpacity(), t), t);
+				return fillStyle;
 			} else if (marker instanceof Marker) {
 				throw new ConfigRuntimeException("Icon markers are not valid here.", ExceptionType.PluginInternalException, t);
 			} else if (marker instanceof PolyLineMarker) {
@@ -1210,27 +1209,27 @@ public class DynmapMarkers {
 			GenericMarker marker = getDynmapMarker(args[0].val(), args[1].val(), t);
 			if (marker instanceof AreaMarker) {
 				AreaMarker areaMarker = (AreaMarker) marker;
-				CArray line_style = new CArray(t);
-				line_style.set("color", CHDynmapConverters.getColorArray(areaMarker.getLineColor(), t), t);
-				line_style.set("opacity", new CDouble(areaMarker.getLineOpacity(), t), t);
-				line_style.set("weight", new CInt(areaMarker.getLineWeight(), t), t);
-				return line_style;
+				CArray lineStyle = new CArray(t);
+				lineStyle.set("color", CHDynmapConverters.getColorArray(areaMarker.getLineColor(), t), t);
+				lineStyle.set("opacity", new CDouble(areaMarker.getLineOpacity(), t), t);
+				lineStyle.set("weight", new CInt(areaMarker.getLineWeight(), t), t);
+				return lineStyle;
 			} else if (marker instanceof CircleMarker) {
 				CircleMarker circleMarker = (CircleMarker) marker;
-				CArray line_style = new CArray(t);
-				line_style.set("color", CHDynmapConverters.getColorArray(circleMarker.getLineColor(), t), t);
-				line_style.set("opacity", new CDouble(circleMarker.getLineOpacity(), t), t);
-				line_style.set("weight", new CInt(circleMarker.getLineWeight(), t), t);
-				return line_style;
+				CArray lineStyle = new CArray(t);
+				lineStyle.set("color", CHDynmapConverters.getColorArray(circleMarker.getLineColor(), t), t);
+				lineStyle.set("opacity", new CDouble(circleMarker.getLineOpacity(), t), t);
+				lineStyle.set("weight", new CInt(circleMarker.getLineWeight(), t), t);
+				return lineStyle;
 			} else if (marker instanceof Marker) {
 				throw new ConfigRuntimeException("Icon markers are not valid here.", ExceptionType.PluginInternalException, t);
 			} else if (marker instanceof PolyLineMarker) {
 				PolyLineMarker polyLineMarker = (PolyLineMarker) marker;
-				CArray line_style = new CArray(t);
-				line_style.set("color", CHDynmapConverters.getColorArray(polyLineMarker.getLineColor(), t), t);
-				line_style.set("opacity", new CDouble(polyLineMarker.getLineOpacity(), t), t);
-				line_style.set("weight", new CInt(polyLineMarker.getLineWeight(), t), t);
-				return line_style;
+				CArray lineStyle = new CArray(t);
+				lineStyle.set("color", CHDynmapConverters.getColorArray(polyLineMarker.getLineColor(), t), t);
+				lineStyle.set("opacity", new CDouble(polyLineMarker.getLineOpacity(), t), t);
+				lineStyle.set("weight", new CInt(polyLineMarker.getLineWeight(), t), t);
+				return lineStyle;
 			} else {
 				throw new ConfigRuntimeException("Unknown marker type! Is the extension up to date?", ExceptionType.PluginInternalException, t);
 			}
@@ -1431,7 +1430,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
 			Marker marker = getDynmapIconMarker(args[0].val(), args[1].val(), t);
-			MCLocation location = CHDynmapConverters.getMCLocation(args[2], marker.getWorld(), t);
+			MCLocation location = ObjectGenerator.GetGenerator().location(args[2], Static.getServer().getWorld(marker.getWorld()), t);
 			marker.setLocation(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
 			return new CVoid(t);
 		}

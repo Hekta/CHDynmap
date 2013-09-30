@@ -49,12 +49,14 @@ public class DynmapEvents {
 
 		public BindableEvent convert(CArray manualObject) {
 			throw new ConfigRuntimeException("This operation is not supported.", ExceptionType.BindException, Target.UNKNOWN);
-//			String source = manualObject.get("source").val();
-//			String message = manualObject.get("message").val();
-//			String name = manualObject.get("name").val();
-////			new DynmapWebChatEvent(source, name, message);
-//			return EventBuilder.instantiate(CHDynmapWebChatEvent.class, source, name, message);
-		}
+/*			//TODO
+*			String source = manualObject.get("source").val();
+*			String message = manualObject.get("message").val();
+*			String name = manualObject.get("name").val();
+*			return EventBuilder.instantiate(CHDynmapWebChatEvent.class, source, name, message);
+*
+*			//new DynmapWebChatEvent(source, name, message);
+*/		}
 
 		public boolean modifyEvent(String key, Construct value, BindableEvent event) {
 			return false;
