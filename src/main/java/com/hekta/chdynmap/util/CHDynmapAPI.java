@@ -22,10 +22,10 @@ import org.dynmap.markers.PolyLineMarker;
  *
  * @author Hekta
  */
-public class CHDynmapAPI {
+public final class CHDynmapAPI {
 	
-	public static DynmapAPI dynmapapi = (DynmapAPI) Static.getServer().getPluginManager().getPlugin("dynmap").getHandle();
-	public static MarkerAPI markerapi = dynmapapi.getMarkerAPI();
+	public static final DynmapAPI dynmapapi = (DynmapAPI) Static.getServer().getPluginManager().getPlugin("dynmap").getHandle();
+	public static final MarkerAPI markerapi = dynmapapi.getMarkerAPI();
 
 	public static MarkerSet getDynmapMarkerSet(String setID, Target t) {
 		MarkerSet set = markerapi.getMarkerSet(setID);

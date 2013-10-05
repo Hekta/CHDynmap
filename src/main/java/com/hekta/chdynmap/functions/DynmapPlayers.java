@@ -140,7 +140,7 @@ public class DynmapPlayers {
 		}
 
 		public Integer[] numArgs() {
-			return new Integer[]{1, 2};
+			return new Integer[]{1, 2, 3};
 		}
 
 		public ExceptionType[] thrown() {
@@ -156,7 +156,8 @@ public class DynmapPlayers {
 		}
 
 		public String docs() {
-			return "void {[playerName], boolean} Set the player visibility (transient, if player is configured to be hidden, it is made visibile if one or more plugins assert their visibility)."
+			return "void {[playerName], boolean | playerName, boolean, [pluginID]} Asserts the player visibility (transient, if player is configured to be visible, it is made hidden if one or more plugins assert its invisibility)."
+					+ " pluginID is the id that will be used to assert, default to 'CommandHelper'"
 					+ " This will not throw a PlayerOfflineException (exept from console), so the name must be exact.";
 		}
 
@@ -168,6 +169,7 @@ public class DynmapPlayers {
 			Static.checkPlugin("dynmap", t);
 			String player;
 			boolean isVisible;
+			String plugin;
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
@@ -175,12 +177,18 @@ public class DynmapPlayers {
 				} else {
 					player = Static.getServer().getOfflinePlayer(psender.getName()).getName();
 					isVisible = Static.getBoolean(args[0]);
+					plugin = "CommandHelper";
 				}
+			} else if (args.length == 2) {
+				player = Static.getServer().getOfflinePlayer(args[0].val()).getName();
+				isVisible = Static.getBoolean(args[1]);
+				plugin = "CommandHelper";
 			} else {
 				player = Static.getServer().getOfflinePlayer(args[0].val()).getName();
 				isVisible = Static.getBoolean(args[1]);
+				plugin = args[2].val();
 			}
-			dynmapapi.assertPlayerVisibility(player, isVisible, "CommandHelper");
+			dynmapapi.assertPlayerVisibility(player, isVisible, plugin);
 			return new CVoid(t);
 		}
 	}
@@ -193,7 +201,7 @@ public class DynmapPlayers {
 		}
 
 		public Integer[] numArgs() {
-			return new Integer[]{1, 2};
+			return new Integer[]{1, 2, 3};
 		}
 
 		public ExceptionType[] thrown() {
@@ -209,7 +217,8 @@ public class DynmapPlayers {
 		}
 
 		public String docs() {
-			return "void {[playerName], boolean} Set the player invisibility (transient, if player is configured to be hidden, it is made visibile if one or more plugins assert their visibility)."
+			return "void {[playerName], boolean | playerName, boolean, [pluginID]} Asserts the player invisibility (transient, if player is configured to be hidden, it is made visibile if one or more plugins assert its visibility)."
+					+ " pluginID is the id that will be used to assert, default to 'CommandHelper'"
 					+ " This will not throw a PlayerOfflineException (exept from console), so the name must be exact.";
 		}
 
@@ -221,6 +230,7 @@ public class DynmapPlayers {
 			Static.checkPlugin("dynmap", t);
 			String player;
 			boolean isInvisible;
+			String plugin;
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
@@ -228,12 +238,18 @@ public class DynmapPlayers {
 				} else {
 					player = Static.getServer().getOfflinePlayer(psender.getName()).getName();
 					isInvisible = Static.getBoolean(args[0]);
+					plugin = "CommandHelper";
 				}
+			} else if (args.length == 2) {
+				player = Static.getServer().getOfflinePlayer(args[0].val()).getName();
+				isInvisible = Static.getBoolean(args[1]);
+				plugin = "CommandHelper";
 			} else {
 				player = Static.getServer().getOfflinePlayer(args[0].val()).getName();
 				isInvisible = Static.getBoolean(args[1]);
+				plugin = args[2].val();
 			}
-			dynmapapi.assertPlayerInvisibility(player, isInvisible, "CommandHelper");
+			dynmapapi.assertPlayerInvisibility(player, isInvisible, plugin);
 			return new CVoid(t);
 		}
 	}

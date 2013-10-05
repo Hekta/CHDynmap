@@ -547,7 +547,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
 			CircleMarker marker = getDynmapCircleMarker(args[0].val(), args[1].val(), t);
-			return CHDynmapConverters.getLocationArray(marker.getCenterX(), marker.getCenterY(), marker.getCenterZ(), marker.getWorld());
+			return CHDynmapConverters.getLocationArray(marker.getCenterX(), marker.getCenterY(), marker.getCenterZ(), Static.getServer().getWorld(marker.getWorld()));
 		}
 	}
 
@@ -628,7 +628,7 @@ public class DynmapMarkers {
 			if (marker instanceof AreaMarker) {
 				AreaMarker areaMarker = (AreaMarker) marker;
 				CArray corners = new CArray(t);
-				String world = marker.getWorld();
+				MCWorld world = Static.getServer().getWorld(marker.getWorld());
 				for (int cornerCount = 0; cornerCount<areaMarker.getCornerCount(); cornerCount++) {
 					corners.push(CHDynmapConverters.getLocationArray(areaMarker.getCornerX(cornerCount), 0, areaMarker.getCornerZ(cornerCount), world));
 				}
@@ -640,7 +640,7 @@ public class DynmapMarkers {
 			} else if (marker instanceof PolyLineMarker) {
 				PolyLineMarker polyLineMarker = (PolyLineMarker) marker;
 				CArray corners = new CArray(t);
-				String world = marker.getWorld();
+				MCWorld world = Static.getServer().getWorld(marker.getWorld());
 				for (int cornerCount = 0; cornerCount<polyLineMarker.getCornerCount(); cornerCount++) {
 					corners.push(CHDynmapConverters.getLocationArray(polyLineMarker.getCornerX(cornerCount), polyLineMarker.getCornerY(cornerCount), polyLineMarker.getCornerZ(cornerCount), world));
 				}
@@ -1392,7 +1392,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Static.checkPlugin("dynmap", t);
 			Marker marker = getDynmapIconMarker(args[0].val(), args[1].val(), t);
-			return CHDynmapConverters.getLocationArray(marker.getX(), marker.getY(), marker.getZ(), marker.getWorld());
+			return CHDynmapConverters.getLocationArray(marker.getX(), marker.getY(), marker.getZ(), Static.getServer().getWorld(marker.getWorld()));
 		}
 	}
 
