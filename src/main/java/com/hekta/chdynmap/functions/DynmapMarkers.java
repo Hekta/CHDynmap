@@ -313,7 +313,7 @@ public class DynmapMarkers {
 			MarkerIcon icon;
 			if (type == CHDynmapMarkerType.ICON) {
 				if (keys.contains("icon")) {
-					icon = getDynmapIcon(optionArray.get("radius", t).val(), t);
+					icon = getDynmapIcon(optionArray.get("icon", t).val(), t);
 				} else {
 					icon = null;
 				}
