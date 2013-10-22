@@ -1,12 +1,9 @@
 package com.hekta.chdynmap.functions;
 
-import com.laytonsmith.abstraction.MCCommandSender;
-import com.laytonsmith.abstraction.MCOfflinePlayer;
 import com.laytonsmith.abstraction.MCPlayer;
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.core.CHVersion;
 import com.laytonsmith.core.constructs.CBoolean;
-import com.laytonsmith.core.constructs.CNull;
 import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.CVoid;
 import com.laytonsmith.core.constructs.Target;
@@ -156,8 +153,8 @@ public class DynmapPlayers {
 		}
 
 		public String docs() {
-			return "void {[playerName], boolean | playerName, boolean, [pluginID]} Asserts the player visibility (transient, if player is configured to be visible, it is made hidden if one or more plugins assert its invisibility)."
-					+ " pluginID is the id that will be used to assert, default to 'CommandHelper'"
+			return "void {[playerName], boolean | playerName, boolean, [pluginID]} Asserts the player visibility (transient, if player is configured to be visible, it is made hidden if one or more plugins assert its invisibility),"
+					+ " pluginID is the id that will be used to assert, default to 'CommandHelper'."
 					+ " This will not throw a PlayerOfflineException (exept from console), so the name must be exact.";
 		}
 
@@ -217,8 +214,8 @@ public class DynmapPlayers {
 		}
 
 		public String docs() {
-			return "void {[playerName], boolean | playerName, boolean, [pluginID]} Asserts the player invisibility (transient, if player is configured to be hidden, it is made visibile if one or more plugins assert its visibility)."
-					+ " pluginID is the id that will be used to assert, default to 'CommandHelper'"
+			return "void {[playerName], boolean | playerName, boolean, [pluginID]} Asserts the player invisibility (transient, if player is configured to be hidden, it is made visibile if one or more plugins assert its visibility),"
+					+ " pluginID is the id that will be used to assert, default to 'CommandHelper'."
 					+ " This will not throw a PlayerOfflineException (exept from console), so the name must be exact.";
 		}
 

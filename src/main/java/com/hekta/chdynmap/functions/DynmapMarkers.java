@@ -21,14 +21,13 @@ import com.laytonsmith.core.functions.AbstractFunction;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import com.laytonsmith.core.ObjectGenerator;
 import com.laytonsmith.core.Static;
-import com.laytonsmith.PureUtilities.StringUtils;
+import com.laytonsmith.PureUtilities.Common.StringUtils;
 import com.laytonsmith.PureUtilities.Version;
 
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.CircleMarker;
 import org.dynmap.markers.GenericMarker;
 import org.dynmap.markers.Marker;
-import org.dynmap.markers.MarkerDescription;
 import org.dynmap.markers.MarkerIcon;
 import org.dynmap.markers.MarkerSet;
 import org.dynmap.markers.PolyLineMarker;
@@ -39,7 +38,6 @@ import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapIcon;
 import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapIconMarker;
 import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapMarker;
 import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapMarkerSet;
-import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapPolyLineMarker;
 import com.hekta.chdynmap.util.CHDynmapConverters;
 import com.hekta.chdynmap.util.CHDynmapMarkerType;
 

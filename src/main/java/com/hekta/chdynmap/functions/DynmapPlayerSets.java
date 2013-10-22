@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.laytonsmith.annotations.api;
-import com.laytonsmith.abstraction.MCLocation;
 import com.laytonsmith.abstraction.MCPlayer;
 import com.laytonsmith.core.CHVersion;
 import com.laytonsmith.core.constructs.CArray;
@@ -18,7 +17,6 @@ import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
-import com.laytonsmith.core.ObjectGenerator;
 import com.laytonsmith.core.Static;
 import com.laytonsmith.PureUtilities.Version;
 

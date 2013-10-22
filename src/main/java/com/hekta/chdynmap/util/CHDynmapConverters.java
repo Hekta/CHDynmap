@@ -2,7 +2,6 @@ package com.hekta.chdynmap.util;
 
 import java.awt.Color;
 
-import com.laytonsmith.abstraction.Convertor;
 import com.laytonsmith.abstraction.MCColor;
 import com.laytonsmith.abstraction.MCWorld;
 import com.laytonsmith.abstraction.StaticLayer;
