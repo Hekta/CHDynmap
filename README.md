@@ -2,11 +2,11 @@ CHDynmap
 ========
 
 
-- CHDynmap is an extension for CommandHelper to use the Dynmap API with MethodScript (add icons, create markers, web chat event ...)
+- CHDynmap is an extension that allows to use and interact with Dynmap plugin (add icons, create markers, web chat event ...)
 
-- To install the extension, put the [jar file](http://build.zeoldcraft.com/job/CHDynMap/) in the extensions folder of the CommandHelper folder
+- To install the extension, put the [jar file](http://ci.nixium.com/job/CHDynMap/) in the extensions folder of the CommandHelper folder
  
-- The last version is compatible with Dynmap 1.9, CommandHelper 3.3.1-2396 and craftbukkit 1.6.2-R1.0
+- The last version is compatible with Dynmap 1.9, CommandHelper 3.3.1-2424 and craftbukkit 1.6.4-R1.1
 
 - The documentation for the extension is [here](https://github.com/Hekta/CHDynmap/wiki)
 

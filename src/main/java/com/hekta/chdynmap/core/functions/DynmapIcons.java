@@ -1,7 +1,8 @@
-package com.hekta.chdynmap.functions;
+package com.hekta.chdynmap.core.functions;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.core.CHVersion;
@@ -16,16 +17,14 @@ import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import com.laytonsmith.core.Security;
-import com.laytonsmith.core.Static;
 import com.laytonsmith.PureUtilities.Version;
+import com.laytonsmith.PureUtilities.Common.StringUtils;
 
-import org.dynmap.markers.MarkerIcon;
+import com.hekta.chdynmap.abstraction.MCDynmapIcon;
+import com.hekta.chdynmap.abstraction.enums.MCDynmapIconSize;
+import com.hekta.chdynmap.core.CHDynmapStatic;
 
-import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapIcon;
-import static com.hekta.chdynmap.util.CHDynmapAPI.markerapi;
-import static com.hekta.chdynmap.util.CHDynmapAPI.testDynmapIDValidity;
-
-/*
+/**
  *
  * @author Hekta
  */
@@ -35,8 +34,34 @@ public class DynmapIcons {
 		return "A class of functions to manage the Dynmap icons.";
 	}
 
+	public static abstract class DynmapIconFunction extends AbstractFunction {
+
+		public boolean isRestricted() {
+			return true;
+		}
+
+		public Boolean runAsync() {
+			return false;
+		}
+
+		public Version since() {
+			return CHVersion.V3_3_1;
+		}
+	}
+
+	public static abstract class DynmapIconGetterFunction extends DynmapIconFunction {
+
+		public Integer[] numArgs() {
+			return new Integer[]{1};
+		}
+
+		public ExceptionType[] thrown() {
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		}
+	}
+
 	@api
-	public static class dm_all_icons extends AbstractFunction {
+	public static class dm_all_icons extends DynmapIconFunction {
 
 		public String getName() {
 			return "dm_all_icons";
@@ -47,37 +72,24 @@ public class DynmapIcons {
 		}
 
 		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
 		}
 
 		public String docs() {
 			return "array {} Returns an array containing all the icon IDs.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			CArray iconList = new CArray(t);
-			for (MarkerIcon icon : markerapi.getMarkerIcons()) {
-				iconList.push(new CString(icon.getMarkerIconID(), t));
+			CArray iconArray = new CArray(t);
+			for (MCDynmapIcon icon : CHDynmapStatic.getMarkerAPI(t).getIcons()) {
+				iconArray.push(new CString(icon.getId(), t));
 			}
-			return iconList;
+			return iconArray;
 		}
 	}
 
 	@api
-	public static class dm_create_icon extends AbstractFunction {
+	public static class dm_create_icon extends DynmapIconFunction {
 
 		public String getName() {
 			return "dm_create_icon";
@@ -88,15 +100,7 @@ public class DynmapIcons {
 		}
 
 		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.IOException, ExceptionType.SecurityException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.IOException, ExceptionType.SecurityException};
 		}
 
 		public String docs() {
@@ -106,17 +110,12 @@ public class DynmapIcons {
 					+ " The image file must be encoded in PNG.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
 			String iconID = args[0].val();
 			//is the id valid ?
-			testDynmapIDValidity(iconID, t);
+			CHDynmapStatic.testDynmapIDValidity(iconID, t);
 			//already exists ?
-			if (markerapi.getMarkerIcon(iconID) != null) {
+			if (CHDynmapStatic.getMarkerAPI(t).getIcon(iconID) != null) {
 				throw new ConfigRuntimeException("\"" + iconID + "\" is already an existing icon.", ExceptionType.PluginInternalException, t);
 			}
 			//label and image file
@@ -135,20 +134,21 @@ public class DynmapIcons {
 			FileInputStream image;
 			try {
 				image = new FileInputStream(file);
-			} catch (Exception exception) {
+			} catch (FileNotFoundException exception) {
 				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.IOException, t);
 			}
 			//create icon
-			MarkerIcon icon = markerapi.createMarkerIcon(iconID, label, image);
-			if (icon == null) {
+			MCDynmapIcon icon = CHDynmapStatic.getMarkerAPI(t).createIcon(iconID, label, image);
+			if (icon != null) {
+				return new CString(icon.getId(), t);
+			} else {
 				throw new ConfigRuntimeException("The icon creation failed.", ExceptionType.PluginInternalException, t);
 			}
-			return new CString(icon.getMarkerIconID(), t);
 		}
 	}
 
 	@api
-	public static class dm_delete_icon extends AbstractFunction {
+	public static class dm_delete_icon extends DynmapIconFunction {
 
 		public String getName() {
 			return "dm_delete_icon";
@@ -159,75 +159,42 @@ public class DynmapIcons {
 		}
 
 		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
 		}
 
 		public String docs() {
 			return "void {iconID} Deletes an icon (can't be used on builtin icons).";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			MarkerIcon icon = getDynmapIcon(args[0].val(), t);
+			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[0].val(), t);
 			if (icon.isBuiltIn()) {
 				throw new ConfigRuntimeException("Builtin icons can't be deleted.", ExceptionType.PluginInternalException, t);
+			} else {
+				icon.delete();
 			}
-			icon.deleteIcon();
 			return new CVoid(t);
 		}
 	}
 
 	@api
-	public static class dm_icon_is_builtin extends AbstractFunction {
+	public static class dm_icon_is_builtin extends DynmapIconGetterFunction {
 
 		public String getName() {
 			return "dm_icon_is_builtin";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{1};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
 			return "boolean {iconID} Returns if an icon is builtin.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CBoolean(getDynmapIcon(args[0].val(), t).isBuiltIn(), t);
+			return new CBoolean(CHDynmapStatic.getIcon(args[0].val(), t).isBuiltIn(), t);
 		}
 	}
 
 	@api
-	public static class dm_set_icon_image extends AbstractFunction {
+	public static class dm_set_icon_image extends DynmapIconFunction {
 
 		public String getName() {
 			return "dm_set_icon_image";
@@ -238,28 +205,15 @@ public class DynmapIcons {
 		}
 
 		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.IOException, ExceptionType.SecurityException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.IOException, ExceptionType.SecurityException};
 		}
 
 		public String docs() {
 			return "void {iconID, file} Sets the image of the icon (image format must be PNG).";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			MarkerIcon icon = getDynmapIcon(args[0].val(), t);
+			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[0].val(), t);
 			File file = new File(t.file().getParentFile(), args[1].val());
 			if (!Security.CheckSecurity(file.getAbsolutePath())) {
 				throw new ConfigRuntimeException("You do not have permission to access the file '" + file.getAbsolutePath() + "'", ExceptionType.SecurityException, t);
@@ -267,53 +221,32 @@ public class DynmapIcons {
 			FileInputStream image;
 			try {
 				image = new FileInputStream(file);
-			} catch (Exception exception) {
+			} catch (FileNotFoundException exception) {
 				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.IOException, t);
 			}
-			icon.setMarkerIconImage(image);
+			icon.setImage(image);
 			return new CVoid(t);
 		}
 	}
 
 	@api
-	public static class dm_icon_label extends AbstractFunction {
+	public static class dm_icon_label extends DynmapIconGetterFunction {
 
 		public String getName() {
 			return "dm_icon_label";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{1};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
 			return "string {iconID} Returns the label of the icon.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CString(getDynmapIcon(args[0].val(), t).getMarkerIconLabel(), t);
+			return new CString(CHDynmapStatic.getIcon(args[0].val(), t).getLabel(), t);
 		}
 	}
 
 	@api
-	public static class dm_set_icon_label extends AbstractFunction {
+	public static class dm_set_icon_label extends DynmapIconFunction {
 
 		public String getName() {
 			return "dm_set_icon_label";
@@ -324,66 +257,32 @@ public class DynmapIcons {
 		}
 
 		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
 		}
 
 		public String docs() {
 			return "void {iconID, label} Sets the label of the icon.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			getDynmapIcon(args[0].val(), t).setMarkerIconLabel(args[1].val());
+			CHDynmapStatic.getIcon(args[0].val(), t).setLabel(args[1].val());
 			return new CVoid(t);
 		}
 	}
 
 	@api
-	public static class dm_icon_size extends AbstractFunction {
+	public static class dm_icon_size extends DynmapIconGetterFunction {
 
 		public String getName() {
 			return "dm_icon_size";
 		}
 
-		public Integer[] numArgs() {
-			return new Integer[]{1};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
-		}
-
 		public String docs() {
-			return "string {iconID} Returns the size of the icon. Size can be one of 8x8, 16x16, or 32x32.";
-		}
-
-		public Version since() {
-			return CHVersion.V3_3_1;
+			return "string {iconID} Returns the size of the icon. Size can be one of " + StringUtils.Join(MCDynmapIconSize.values(), ", ", ", or ", " or ") + ".";
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CString(getDynmapIcon(args[0].val(), t).getMarkerIconSize().getSize(), t);
+			return new CString(CHDynmapStatic.getIcon(args[0].val(), t).getSize().name(), t);
 		}
 	}
 }

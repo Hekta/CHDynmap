@@ -1,4 +1,4 @@
-package com.hekta.chdynmap.events;
+package com.hekta.chdynmap.core.events;
 
 import java.util.Map;
 
@@ -20,17 +20,17 @@ import com.laytonsmith.core.exceptions.PrefilterNonMatchException;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import com.laytonsmith.PureUtilities.Version;
 
-import com.hekta.chdynmap.events.CHDynmapBindableEvents.CHDynmapWebChatEvent;
+import com.hekta.chdynmap.abstraction.events.MCDynmapWebChatEvent;
 
-/*
+/**
  *
  * @author Hekta
  */
 public class DynmapEvents {
 
-    public static String docs(){
-        return "Contains events related to the Dynmap plugin";
-    }
+	public static String docs() {
+		return "Contains events related to the Dynmap plugin";
+	}
 
 	@api
 	public static class dm_player_web_chat extends AbstractEvent {
@@ -59,7 +59,7 @@ public class DynmapEvents {
 		}
 
 		public String docs() {
-			return "{name: <macro> | processed: <macro> | source: <macro>}"
+			return "{name: <macro> | processed: <boolean match> | source: <macro>}"
 					+ " Fires when a player send a message on the Dynmap."
 					+ " {message: the message the player sent | name: the name of the sender | processed: returns if the event has been handled by a plugin | source: from where the message is sent}"
 					+ " {}"
@@ -70,26 +70,27 @@ public class DynmapEvents {
 			return CHVersion.V3_3_1;
 		}
 
-		public boolean matches(Map<String, Construct> prefilter, BindableEvent event) throws PrefilterNonMatchException  {
-			if (event instanceof CHDynmapWebChatEvent) {
-				CHDynmapWebChatEvent webChat = (CHDynmapWebChatEvent) event;
-				Prefilters.match(prefilter, "source", webChat.getSource(), PrefilterType.MACRO);
-				Prefilters.match(prefilter, "name", webChat.getName(), PrefilterType.MACRO);
-				Prefilters.match(prefilter, "processed", String.valueOf(webChat.isProcessed()), PrefilterType.MACRO);
+		public boolean matches(Map<String, Construct> prefilter, BindableEvent event) throws PrefilterNonMatchException {
+			if (event instanceof MCDynmapWebChatEvent) {
+				MCDynmapWebChatEvent wce = (MCDynmapWebChatEvent) event;
+				Prefilters.match(prefilter, "source", wce.getSource(), PrefilterType.MACRO);
+				Prefilters.match(prefilter, "name", wce.getName(), PrefilterType.MACRO);
+				Prefilters.match(prefilter, "processed", String.valueOf(wce.isProcessed()), PrefilterType.MACRO);
 				return true;
+			} else {
+				return false;
 			}
-			return false;
 		}
 
 		public Map<String, Construct> evaluate(BindableEvent event) throws EventException {
-			if (event instanceof CHDynmapWebChatEvent) {
+			if (event instanceof MCDynmapWebChatEvent) {
 				Map<String, Construct> eventObject = evaluate_helper(event);
-				CHDynmapWebChatEvent webChat = (CHDynmapWebChatEvent) event;
+				MCDynmapWebChatEvent wce = (MCDynmapWebChatEvent) event;
 				Target t = Target.UNKNOWN;
-				eventObject.put("source", new CString(webChat.getSource(), t));
-				eventObject.put("name", new CString(webChat.getName(), t));
-				eventObject.put("message", new CString(webChat.getMessage(), t));
-				eventObject.put("processed", new CBoolean(webChat.isProcessed(), t));
+				eventObject.put("source", new CString(wce.getSource(), t));
+				eventObject.put("name", new CString(wce.getName(), t));
+				eventObject.put("message", new CString(wce.getMessage(), t));
+				eventObject.put("processed", new CBoolean(wce.isProcessed(), t));
 				return eventObject;
 			} else {
 				throw new EventException("Cannot convert to CHDynmapWebChatEvent.");

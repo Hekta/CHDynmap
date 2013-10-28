@@ -1,7 +1,6 @@
-package com.hekta.chdynmap.functions;
+package com.hekta.chdynmap.core.functions;
 
 import com.laytonsmith.annotations.api;
-import com.laytonsmith.abstraction.MCLocation;
 import com.laytonsmith.abstraction.MCPlayer;
 import com.laytonsmith.abstraction.MCWorld;
 import com.laytonsmith.core.CHVersion;
@@ -18,9 +17,9 @@ import com.laytonsmith.core.ObjectGenerator;
 import com.laytonsmith.core.Static;
 import com.laytonsmith.PureUtilities.Version;
 
-import static com.hekta.chdynmap.util.CHDynmapAPI.dynmapapi;
+import com.hekta.chdynmap.core.CHDynmapStatic;
 
-/*
+/**
  *
  * @author Hekta
  */
@@ -64,12 +63,13 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			String senderLabel = "CommandHelper";
+			String senderLabel;
 			if (args.length == 2) {
 				senderLabel = args[1].val();
+			} else {
+				senderLabel = "CommandHelper";
 			}
-			dynmapapi.sendBroadcastToWeb(senderLabel, args[0].val());
+			CHDynmapStatic.getDynmapAPI(t).sendBroadcastToWeb(senderLabel, args[0].val());
 			return new CVoid(t);
 		}
 	}
@@ -106,8 +106,7 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CBoolean(dynmapapi.getPauseFullRadiusRenders(), t);
+			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).getPauseFullRadiusRenders(), t);
 		}
 	}
 
@@ -143,8 +142,7 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			dynmapapi.setPauseFullRadiusRenders(Static.getBoolean(args[0]));
+			CHDynmapStatic.getDynmapAPI(t).setPauseFullRadiusRenders(Static.getBoolean(args[0]));
 			return new CVoid(t);
 		}
 	}
@@ -181,8 +179,7 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CBoolean(dynmapapi.getPauseUpdateRenders(), t);
+			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).getPauseUpdateRenders(), t);
 		}
 	}
 
@@ -218,8 +215,7 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			dynmapapi.setPauseUpdateRenders(Static.getBoolean(args[0]));
+			CHDynmapStatic.getDynmapAPI(t).setPauseUpdateRenders(Static.getBoolean(args[0]));
 			return new CVoid(t);
 		}
 	}
@@ -256,8 +252,7 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			dynmapapi.setDisableChatToWebProcessing(!Static.getBoolean(args[0]));
+			CHDynmapStatic.getDynmapAPI(t).setChatToWebProcessingEnabled(Static.getBoolean(args[0]));
 			return new CVoid(t);
 		}
 	}
@@ -294,7 +289,6 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
 			MCPlayer player = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 			MCWorld world;
 			if (player == null) {
@@ -302,8 +296,7 @@ public class DynmapGeneric {
 			} else {
 				world = player.getWorld();
 			}
-			MCLocation location = ObjectGenerator.GetGenerator().location(args[0], world, t);
-			dynmapapi.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+			CHDynmapStatic.getDynmapAPI(t).triggerRenderOfBlock(ObjectGenerator.GetGenerator().location(args[0], world, t));
 			return new CVoid(t);
 		}
 	}
@@ -341,7 +334,6 @@ public class DynmapGeneric {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
 			MCPlayer player = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 			MCWorld world;
 			if (player == null) {
@@ -349,12 +341,11 @@ public class DynmapGeneric {
 			} else {
 				world = player.getWorld();
 			}
-			MCLocation location1 = ObjectGenerator.GetGenerator().location(args[0], world, t);
-			MCLocation location2 = ObjectGenerator.GetGenerator().location(args[1], world, t);
-			if ((location1.getWorld()) != (location2.getWorld())) {
-				throw new ConfigRuntimeException("Worlds are not the same.", ExceptionType.FormatException, t);
+			try {
+				CHDynmapStatic.getDynmapAPI(t).triggerRenderOfVolume(ObjectGenerator.GetGenerator().location(args[0], world, t), ObjectGenerator.GetGenerator().location(args[1], world, t));
+			} catch (IllegalArgumentException exception) {
+				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.FormatException, t);
 			}
-			dynmapapi.triggerRenderOfVolume(location1.getWorld().getName(), location1.getBlockX(), location1.getBlockY(), location1.getBlockZ(), location2.getBlockX(), location2.getBlockY(), location2.getBlockZ());
 			return new CVoid(t);
 		}
 	}

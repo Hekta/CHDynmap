@@ -20,6 +20,14 @@
 			</releases>
 			<snapshots>
 			</snapshots>
+			<id>bukkit-repo</id>
+			<url>http://repo.bukkit.org/content/groups/public</url>
+		</repository>
+		<repository>
+			<releases>
+			</releases>
+			<snapshots>
+			</snapshots>
 			<id>sk89q-mvn2</id>
 			<url>http://mvn2.sk89q.com/repo</url>
 		</repository>
@@ -34,6 +42,11 @@
 	</repositories>
 
 	<dependencies>
+		<dependency>
+			<groupId>org.bukkit</groupId>
+			<artifactId>bukkit</artifactId>
+			<version>LATEST</version>
+		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>commandhelper</artifactId>

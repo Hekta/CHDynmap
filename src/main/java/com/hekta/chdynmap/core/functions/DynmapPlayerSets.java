@@ -1,9 +1,10 @@
-package com.hekta.chdynmap.functions;
+package com.hekta.chdynmap.core.functions;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import com.laytonsmith.annotations.api;
+import com.laytonsmith.abstraction.MCOfflinePlayer;
 import com.laytonsmith.abstraction.MCPlayer;
 import com.laytonsmith.core.CHVersion;
 import com.laytonsmith.core.constructs.CArray;
@@ -20,13 +21,10 @@ import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import com.laytonsmith.core.Static;
 import com.laytonsmith.PureUtilities.Version;
 
-import org.dynmap.markers.PlayerSet;
+import com.hekta.chdynmap.abstraction.MCDynmapPlayerSet;
+import com.hekta.chdynmap.core.CHDynmapStatic;
 
-import static com.hekta.chdynmap.util.CHDynmapAPI.getDynmapPlayerSet;
-import static com.hekta.chdynmap.util.CHDynmapAPI.markerapi;
-import static com.hekta.chdynmap.util.CHDynmapAPI.testDynmapIDValidity;
-
-/*
+/**
  *
  * @author Hekta
  */
@@ -36,8 +34,45 @@ public class DynmapPlayerSets {
 		return "A class of functions to manage the Dynmap playersets.";
 	}
 
+	public static abstract class DynmapPlayerSetFunction extends AbstractFunction {
+
+		public boolean isRestricted() {
+			return true;
+		}
+
+		public Boolean runAsync() {
+			return false;
+		}
+
+		public Version since() {
+			return CHVersion.V3_3_1;
+		}
+	}
+
+	public static abstract class DynmapPlayerSetGetterFunction extends DynmapPlayerSetFunction {
+
+		public Integer[] numArgs() {
+			return new Integer[]{1};
+		}
+
+		public ExceptionType[] thrown() {
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		}
+	}
+
+	public static abstract class DynmapPlayerSetSetterFunction extends DynmapPlayerSetFunction {
+
+		public Integer[] numArgs() {
+			return new Integer[]{2};
+		}
+
+		public ExceptionType[] thrown() {
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException};
+		}
+	}
+
 	@api
-	public static class dm_all_playersets extends AbstractFunction {
+	public static class dm_all_playersets extends DynmapPlayerSetFunction {
 
 		public String getName() {
 			return "dm_all_playersets";
@@ -48,37 +83,24 @@ public class DynmapPlayerSets {
 		}
 
 		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
+			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
 		}
 
 		public String docs() {
 			return "array {} Returns an array containing all the playerset IDs.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			CArray setList = new CArray(t);
-			for (PlayerSet set : markerapi.getPlayerSets()) {
-				setList.push(new CString(set.getSetID(), t));
+			CArray setArray = new CArray(t);
+			for (MCDynmapPlayerSet set : CHDynmapStatic.getMarkerAPI(t).getPlayerSets()) {
+				setArray.push(new CString(set.getId(), t));
 			}
-			return setList;
+			return setArray;
 		}
 	}
 
 	@api
-	public static class dm_create_playerset extends AbstractFunction {
+	public static class dm_create_playerset extends DynmapPlayerSetFunction {
 
 		public String getName() {
 			return "dm_create_playerset";
@@ -92,14 +114,6 @@ public class DynmapPlayerSets {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
 		}
 
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
-		}
-
 		public String docs() {
 			return "string {newSetID, [optionArray]} Creates a playerset and returns its ID."
 					+ " ---- The ID must be unique among playersets and must only contain numbers, letters, periods (.) and underscores (_)."
@@ -110,17 +124,12 @@ public class DynmapPlayerSets {
 					+ " <li>symmetric - false - sets if the playerset will be symmetric (players in set can see other the players in set)</li>";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
 			String setID = args[0].val();
 			//is the id valid ?
-			testDynmapIDValidity(setID, t);
+			CHDynmapStatic.testDynmapIDValidity(setID, t);
 			//already exists ?
-			if (markerapi.getPlayerSet(setID) != null) {
+			if (CHDynmapStatic.getMarkerAPI(t).getPlayerSet(setID) != null) {
 				throw new ConfigRuntimeException("\"" + setID + "\" is already an existing playerset.", ExceptionType.PluginInternalException, t);
 			}
 			//create the option array
@@ -133,41 +142,41 @@ public class DynmapPlayerSets {
 			Set keys = optionArray.keySet();
 			//set optional values
 			//players
-			HashSet<String> players = new HashSet<String>();
+			HashSet<MCOfflinePlayer> players = new HashSet<MCOfflinePlayer>();
 			if (keys.contains("players")) {
 				CArray givenPlayers = Static.getArray(optionArray.get("players", t), t);
 				if (givenPlayers.inAssociativeMode()) {
 					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
 				}
 				for (Construct player : givenPlayers.asList()) {
-					players.add(Static.getServer().getOfflinePlayer(player.val()).getName());
+					players.add(Static.getServer().getOfflinePlayer(player.val()));
 				}
 			}
 			//persistent
 			boolean persistent;
 			if (keys.contains("persistent")) {
-				persistent = Static.getBoolean(optionArray.get("persistent", t));
+				persistent = Static.getBoolean(optionArray.get("persistent"));
 			} else {
 				persistent = false;
 			}
 			//symmetric
 			boolean symmetric;
 			if (keys.contains("symmetric")) {
-				symmetric = Static.getBoolean(optionArray.get("symmetric", t));
+				symmetric = Static.getBoolean(optionArray.get("symmetric"));
 			} else {
 				symmetric = false;
 			}
 			//create player set
-			PlayerSet set = markerapi.createPlayerSet(setID, symmetric, players, persistent);
+			MCDynmapPlayerSet set = CHDynmapStatic.getMarkerAPI(t).createPlayerSet(setID, symmetric, players, persistent);
 			if (set == null) {
 				throw new ConfigRuntimeException("The markerset creation failed.", ExceptionType.PluginInternalException, t);
 			}
-			return new CString(set.getSetID(), t);
+			return new CString(set.getId(), t);
 		}
 	}
 
 	@api
-	public static class dm_delete_playerset extends AbstractFunction {
+	public static class dm_delete_playerset extends DynmapPlayerSetFunction {
 
 		public String getName() {
 			return "dm_delete_playerset";
@@ -181,91 +190,41 @@ public class DynmapPlayerSets {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
 		}
 
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
-		}
-
 		public String docs() {
 			return "void {setID} Deletes a playerset.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			getDynmapPlayerSet(args[0].val(), t).deleteSet();
+			CHDynmapStatic.getPlayerSet(args[0].val(), t).delete();
 			return new CVoid(t);
 		}
 	}
 
 	@api
-	public static class dm_players_in_playerset extends AbstractFunction {
+	public static class dm_players_in_playerset extends DynmapPlayerSetGetterFunction {
 
 		public String getName() {
 			return "dm_players_in_playerset";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{1};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
 			return "array {setID} Returns an array containing all the players in the playerset.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			CArray pList = new CArray(t);
-			for (String player : getDynmapPlayerSet(args[0].val(), t).getPlayers()) {
-				pList.push(new CString(player, t));
+			CArray playerArray = new CArray(t);
+			for (MCOfflinePlayer player : CHDynmapStatic.getPlayerSet(args[0].val(), t).getPlayers()) {
+				playerArray.push(new CString(player.getName(), t));
 			}
-			return pList;
+			return playerArray;
 		}
 	}
 
 	@api
-	public static class dm_set_players_in_playerset extends AbstractFunction {
+	public static class dm_set_players_in_playerset extends DynmapPlayerSetSetterFunction {
 
 		public String getName() {
 			return "dm_set_players_in_playerset";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{2};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
@@ -273,27 +232,22 @@ public class DynmapPlayerSets {
 					+ " This will not throw a PlayerOfflineException, so the name must be exact.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
 			CArray givenPlayers = Static.getArray(args[1], t);
 			if (givenPlayers.inAssociativeMode()) {
 				throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
 			}
-			Set<String> pList = new HashSet<String>();
+			Set<MCOfflinePlayer> players = new HashSet<MCOfflinePlayer>();
 			for (Construct player : givenPlayers.asList()) {
-				pList.add(Static.getServer().getOfflinePlayer(player.val()).getName());
+				players.add(Static.getServer().getOfflinePlayer(player.val()));
 			}
-			getDynmapPlayerSet(args[0].val(), t).setPlayers(pList);
+			CHDynmapStatic.getPlayerSet(args[0].val(), t).setPlayers(players);
 			return new CVoid(t);
 		}
 	}
 
 	@api
-	public static class dm_pis_in_playerset extends AbstractFunction {
+	public static class dm_pis_in_playerset extends DynmapPlayerSetFunction {
 
 		public String getName() {
 			return "dm_pis_in_playerset";
@@ -307,43 +261,29 @@ public class DynmapPlayerSets {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.PlayerOfflineException};
 		}
 
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
-		}
-
 		public String docs() {
 			return "boolean {setID, [playerName]} Returns if a player is in the playerset."
 					+ " This will not throw a PlayerOfflineException (exept from console), so the name must be exact.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			PlayerSet set = getDynmapPlayerSet(args[0].val(), t);
-			String player;
+			MCOfflinePlayer player;
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
 					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
 				} else {
-					player = Static.getServer().getOfflinePlayer(psender.getName()).getName();
+					player = psender;
 				}
 			} else {
-				player = Static.getServer().getOfflinePlayer(args[1].val()).getName();
+				player = Static.getServer().getOfflinePlayer(args[1].val());
 			}
-			return new CBoolean(getDynmapPlayerSet(args[0].val(), t).isPlayerInSet(player), t);
+			return new CBoolean(CHDynmapStatic.getPlayerSet(args[0].val(), t).isPlayerInSet(player), t);
 		}
 	}
 
 	@api
-	public static class dm_set_pis_in_playerset extends AbstractFunction {
+	public static class dm_set_pis_in_playerset extends DynmapPlayerSetFunction {
 
 		public String getName() {
 			return "dm_set_pis_in_playerset";
@@ -357,38 +297,25 @@ public class DynmapPlayerSets {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.PlayerOfflineException};
 		}
 
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
-		}
-
 		public String docs() {
 			return "void {setID, [playerName], boolean} Sets if a player is in the playerset."
 					+ " This will not throw a PlayerOfflineException (exept from console), so the name must be exact.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			PlayerSet set = getDynmapPlayerSet(args[0].val(), t);
-			String player;
+			MCDynmapPlayerSet set = CHDynmapStatic.getPlayerSet(args[0].val(), t);
+			MCOfflinePlayer player;
 			boolean isInSet;
 			if (args.length == 2) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
 					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
 				} else {
-					player = Static.getServer().getOfflinePlayer(psender.getName()).getName();
+					player = psender;
 					isInSet = Static.getBoolean(args[1]);
 				}
 			} else {
-				player = Static.getServer().getOfflinePlayer(args[1].val()).getName();
+				player = Static.getServer().getOfflinePlayer(args[1].val());
 				isInSet = Static.getBoolean(args[2]);
 			}
 			if (isInSet) {
@@ -407,113 +334,50 @@ public class DynmapPlayerSets {
 	}
 
 	@api
-	public static class dm_playerset_persistent extends AbstractFunction {
+	public static class dm_playerset_persistent extends DynmapPlayerSetGetterFunction {
 
 		public String getName() {
 			return "dm_playerset_persistent";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{1};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
 			return "boolean {setID} Returns if the playerset is persistent.";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CBoolean(getDynmapPlayerSet(args[0].val(), t).isPersistentSet(), t);
+			return new CBoolean(CHDynmapStatic.getPlayerSet(args[0].val(), t).isPersistent(), t);
 		}
 	}
 
 	@api
-	public static class dm_playerset_symmetric extends AbstractFunction {
+	public static class dm_playerset_symmetric extends DynmapPlayerSetGetterFunction {
 
 		public String getName() {
 			return "dm_playerset_symmetric";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{1};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
 			return "boolean {setID} Returns if the playerset is symmetric (if true players in set can see other the players in set).";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			return new CBoolean(getDynmapPlayerSet(args[0].val(), t).isSymmetricSet(), t);
+			return new CBoolean(CHDynmapStatic.getPlayerSet(args[0].val(), t).isSymmetric(), t);
 		}
 	}
 
 	@api
-	public static class dm_set_playerset_symmetric extends AbstractFunction {
+	public static class dm_set_playerset_symmetric extends DynmapPlayerSetSetterFunction {
 
 		public String getName() {
 			return "dm_set_playerset_symmetric";
-		}
-
-		public Integer[] numArgs() {
-			return new Integer[]{2};
-		}
-
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
-		}
-
-		public boolean isRestricted() {
-			return true;
-		}
-
-		public Boolean runAsync() {
-			return false;
 		}
 
 		public String docs() {
 			return "void {setID, boolean} Sets if the playerset is symmetric (if true, players in set can see the players in set, if false, privilege is always required).";
 		}
 
-		public Version since() {
-			return CHVersion.V3_3_1;
-		}
-
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			Static.checkPlugin("dynmap", t);
-			getDynmapPlayerSet(args[0].val(), t).setSymmetricSet(Static.getBoolean(args[1]));
+			CHDynmapStatic.getPlayerSet(args[0].val(), t).setSymmetric(Static.getBoolean(args[1]));
 			return new CVoid(t);
 		}
 	}
