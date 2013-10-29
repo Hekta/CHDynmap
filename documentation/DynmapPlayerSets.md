@@ -7,7 +7,11 @@ Returns an array containing all the playerset IDs.
 ### string dm\_create\_playerset(newSetID, [optionArray]):
 Creates a playerset and returns its ID.
 
-The ID must be unique among playersets and must only contain numbers, letters, periods (.) and underscores (_). The option array is associative and not required, and all its keys are optional. <li>KEY - DEFAULT - DESCRIPTION - COMMENT</li> <li>persistent - false - sets if the playerset is persistent - can not be changed later</li> <li>players - empty array - an array of players the playerset will contain</li> <li>symmetric - false - sets if the playerset will be symmetric (players in set can see other the players in set)</li>
+The ID must be unique among playersets and must only contain numbers, letters, periods (.) and underscores (_). The option array is associative and not required, and all its keys are optional.
+<li>KEY - DEFAULT - DESCRIPTION - COMMENT</li>
+<li>persistent - false - sets if the playerset is persistent - can not be changed later</li>
+<li>players - empty array - an array of players the playerset will contain</li>
+<li>symmetric - false - sets if the playerset will be symmetric (players in set can see other the players in set)</li>
 
 ### void dm\_delete\_playerset(setID):
 Deletes a playerset.

@@ -15,7 +15,8 @@ There is 4 types of markers:
 - circle, a flat round region (like the markers created by WorldBorder for the round borders)
 - icon, simple icon, like the spawn marker that appears in each worlds
 - polyline, rarely used, used to create 3D markers
-Each marker is customizable (size, form, color, icon, ...)
+
+Each marker is customizable (size, form, color, icon, ...).
 
 To create a marker:
 
