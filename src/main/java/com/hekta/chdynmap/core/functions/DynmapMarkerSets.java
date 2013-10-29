@@ -139,7 +139,7 @@ public class DynmapMarkerSets {
 			} else {
 				optionArray = Static.getArray(args[1], t);
 			}
-			Set keys = optionArray.keySet();
+			Set<String> keys = optionArray.keySet();
 			//set optional values
 			//allowed_icons
 			HashSet<MCDynmapIcon> allowedIcons;

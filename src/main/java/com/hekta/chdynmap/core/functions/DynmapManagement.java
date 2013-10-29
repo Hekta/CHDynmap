@@ -23,10 +23,10 @@ import com.hekta.chdynmap.core.CHDynmapStatic;
  *
  * @author Hekta
  */
-public class DynmapGeneric {
+public class DynmapManagement {
 
 	public static String docs() {
-		return "A class of functions using generic features of Dynmap.";
+		return "A class of functions that allows to manage and use general features of Dynmap.";
 	}
 
 	@api

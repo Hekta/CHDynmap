@@ -184,7 +184,7 @@ public class DynmapMarkers {
 			} else {
 				optionArray = Static.getArray(args[1], t);
 			}
-			Set keys = optionArray.keySet();
+			Set<String> keys = optionArray.keySet();
 			//set optional values
 			//type
 			MCDynmapMarkerType type;
@@ -217,7 +217,6 @@ public class DynmapMarkers {
 			} else {
 				world = Static.getServer().getWorlds().get(0);
 			}
-			MCLocation spawnLocation = world.getSpawnLocation();
 			//label
 			String label;
 			if (keys.contains("label")) {
@@ -245,7 +244,7 @@ public class DynmapMarkers {
 				if (keys.contains("center")) {
 					center = ObjectGenerator.GetGenerator().location(optionArray.get("center"), world, t);
 				} else {
-					center = spawnLocation;
+					center = world.getSpawnLocation();
 				}
 			} else {
 				center = null;
@@ -263,7 +262,7 @@ public class DynmapMarkers {
 						corners.add(ObjectGenerator.GetGenerator().location(corner, world, t));
 					}
 				} else {
-					corners.add(spawnLocation);
+					corners.add(world.getSpawnLocation());
 				}
 			} else if (type == MCDynmapMarkerType.POLYLINE) {
 				corners = new ArrayList<MCLocation>();
@@ -276,7 +275,7 @@ public class DynmapMarkers {
 						corners.add(ObjectGenerator.GetGenerator().location(corner, world, t));
 					}
 				} else {
-					corners.add(spawnLocation);
+					corners.add(world.getSpawnLocation());
 				}
 			} else {
 				corners = null;
@@ -287,7 +286,7 @@ public class DynmapMarkers {
 				if (keys.contains("icon")) {
 					icon = CHDynmapStatic.getIcon(optionArray.get("icon").val(), t);
 				} else {
-					icon = null;
+					icon = set.getDefaultIcon();
 				}
 			} else {
 				icon = null;
@@ -298,7 +297,7 @@ public class DynmapMarkers {
 				if (keys.contains("location")) {
 					iconLocation = ObjectGenerator.GetGenerator().location(optionArray.get("location"), world, t);
 				} else {
-					iconLocation = spawnLocation;
+					iconLocation = world.getSpawnLocation();
 				}
 			} else {
 				iconLocation = null;

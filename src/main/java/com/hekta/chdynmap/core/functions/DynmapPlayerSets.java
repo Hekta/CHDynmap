@@ -139,7 +139,7 @@ public class DynmapPlayerSets {
 			} else {
 				optionArray = Static.getArray(args[1], t);
 			}
-			Set keys = optionArray.keySet();
+			Set<String> keys = optionArray.keySet();
 			//set optional values
 			//players
 			HashSet<MCOfflinePlayer> players = new HashSet<MCOfflinePlayer>();
