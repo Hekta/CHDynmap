@@ -43,6 +43,7 @@ public class BukkitMCDynmapMarkerLineStyle implements MCDynmapMarkerLineStyle {
 
 	public void setColor(MCColor color) {
 		this.color = color;
+		this.intColor = (new Color(color.getRed(), color.getGreen(), color.getBlue()).getRGB()) + 16777216;
 	}
 
 	public void setColor(int color) {

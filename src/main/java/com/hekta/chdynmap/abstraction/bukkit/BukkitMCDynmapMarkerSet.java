@@ -210,15 +210,30 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 			Zs[i] = location.getZ();
 			i++;
 		}
-		return new BukkitMCDynmapAreaMarker(set.createAreaMarker(id, label, isHTML, world.getName(), Xs, Zs, isPersistent));
+		AreaMarker marker = set.createAreaMarker(id, label, isHTML, world.getName(), Xs, Zs, isPersistent);
+		if (marker != null) {
+			return new BukkitMCDynmapAreaMarker(marker);
+		} else {
+			return null;
+		}
 	}
 
 	public MCDynmapCircleMarker createCircleMarker(String id, String label, boolean isHTML, MCLocation center, double radiusX, double radiusZ, boolean isPersistent) {
-		return new BukkitMCDynmapCircleMarker(set.createCircleMarker(id, label, isHTML, center.getWorld().getName(), center.getX(), center.getY(), center.getZ(), radiusX, radiusZ, isPersistent));
+		CircleMarker marker = set.createCircleMarker(id, label, isHTML, center.getWorld().getName(), center.getX(), center.getY(), center.getZ(), radiusX, radiusZ, isPersistent);
+		if (marker != null) {
+			return new BukkitMCDynmapCircleMarker(marker);
+		} else {
+			return null;
+		}
 	}
 
 	public MCDynmapIconMarker createIconMarker(String id, String label, boolean isHTML, MCLocation location, MCDynmapIcon icon, boolean isPersistent) {
-		return new BukkitMCDynmapIconMarker(set.createMarker(id, label, isHTML, location.getWorld().getName(), location.getX(), location.getY(), location.getZ(), ((BukkitMCDynmapIcon) icon).getConcrete(), isPersistent));
+		Marker marker = set.createMarker(id, label, isHTML, location.getWorld().getName(), location.getX(), location.getY(), location.getZ(), ((BukkitMCDynmapIcon) icon).getConcrete(), isPersistent);
+		if (marker != null) {
+			return new BukkitMCDynmapIconMarker(marker);
+		} else {
+			return null;
+		}
 	}
 
 	public MCDynmapPolyLineMarker createPolyLineMarker(String id, String label, boolean isHTML, MCWorld world, List<MCLocation> corners, boolean isPersistent) {
@@ -233,7 +248,12 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 			Zs[i] = location.getZ();
 			i++;
 		}
-		return new BukkitMCDynmapPolyLineMarker(set.createPolyLineMarker(id, label, isHTML, world.getName(), Xs, Ys, Zs, isPersistent));
+		PolyLineMarker marker = set.createPolyLineMarker(id, label, isHTML, world.getName(), Xs, Ys, Zs, isPersistent);
+		if (marker != null) {
+			return new BukkitMCDynmapPolyLineMarker(marker);
+		} else {
+			return null;
+		}
 	}
 
 	public String getId() {
@@ -257,11 +277,15 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 	}
 
 	public Set<MCDynmapIcon> getAllowedIcons() {
-		Set<MCDynmapIcon> icons = new HashSet<MCDynmapIcon>();
-		for (MarkerIcon icon : set.getAllowedMarkerIcons()) {
-			icons.add(new BukkitMCDynmapIcon(icon));
+		if (this.isRestricted()) {
+			Set<MCDynmapIcon> icons = new HashSet<MCDynmapIcon>();
+			for (MarkerIcon icon : set.getAllowedMarkerIcons()) {
+				icons.add(new BukkitMCDynmapIcon(icon));
+			}
+			return icons;
+		} else {
+			return null;
 		}
-		return icons;
 	}
 
 	public boolean iconIsAllowed(MCDynmapIcon icon) {

@@ -5,7 +5,6 @@ import com.laytonsmith.annotations.startup;
 
 import com.hekta.chdynmap.abstraction.CHDynmapStaticLayer;
 import com.hekta.chdynmap.abstraction.MCDynmapAPI;
-import com.hekta.chdynmap.abstraction.MCDynmapMarkerAPI;
 
 /**
  *
@@ -17,11 +16,12 @@ public class CHDynmapExtension {
 
 	@startup
 	public static void onEnable() {
-		dynmapAPI = CHDynmapStaticLayer.getDynmapAPI();
-		if (dynmapAPI != null) {
+		try {
+			dynmapAPI = CHDynmapStaticLayer.getDynmapAPI();
 			System.out.println("[CommandHelper] CHDynmap 1.0 loaded (for Dynmap 1.9).");
-		} else {
-			System.out.println("[CommandHelper] Plugin Dynmap is missing, none of the CHDynmap functions will work.");
+		} catch (Exception exception) {
+			dynmapAPI = null;
+			System.err.println("[CommandHelper] Plugin Dynmap seems to be missing, none of the CHDynmap functions will work.");
 		}
 	}
 

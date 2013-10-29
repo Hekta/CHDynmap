@@ -6,7 +6,6 @@ import org.dynmap.DynmapAPI;
 
 import com.laytonsmith.abstraction.Implementation;
 import com.laytonsmith.abstraction.MCColor;
-import com.laytonsmith.abstraction.StaticLayer;
 import com.laytonsmith.abstraction.bukkit.BukkitMCPlugin;
 
 import com.hekta.chdynmap.abstraction.MCDynmapAPI;
@@ -23,7 +22,7 @@ import com.hekta.chdynmap.annotations.CHDynmapConvert;
 public class CHDynmapBukkitConvertor implements CHDynmapConvertor {
 
 	public MCDynmapAPI getDynmapAPI() {
-		Plugin plugin = ((BukkitMCPlugin) StaticLayer.GetServer().getPluginManager().getPlugin("dynmap")).getPlugin();
+		Plugin plugin = ((BukkitMCPlugin) com.laytonsmith.commandhelper.CommandHelperPlugin.myServer.getPluginManager().getPlugin("dynmap")).getPlugin();
 		if (plugin != null) {
 			return new BukkitMCDynmapAPI((DynmapAPI) plugin);
 		} else {
