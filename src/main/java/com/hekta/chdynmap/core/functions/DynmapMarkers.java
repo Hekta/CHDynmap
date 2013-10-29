@@ -433,7 +433,7 @@ public class DynmapMarkers {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return ObjectGenerator.GetGenerator().location(CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t).getCenter(), false);
+			return ObjectGenerator.GetGenerator().location(CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t).getCenter());
 		}
 	}
 
@@ -486,7 +486,7 @@ public class DynmapMarkers {
 			}
 			CArray cornerArray = new CArray(t);
 			for (MCLocation location : corners) {
-				cornerArray.push(ObjectGenerator.GetGenerator().location(location, false));
+				cornerArray.push(ObjectGenerator.GetGenerator().location(location));
 			}
 			return cornerArray;
 		}
@@ -858,7 +858,7 @@ public class DynmapMarkers {
 		}
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return ObjectGenerator.GetGenerator().location(CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t).getLocation(), false);
+			return ObjectGenerator.GetGenerator().location(CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t).getLocation());
 		}
 	}
 
