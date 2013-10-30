@@ -349,4 +349,40 @@ public class DynmapManagement {
 			return new CVoid(t);
 		}
 	}
+
+	@api
+	public static class dm_marker_api_initialized extends AbstractFunction {
+
+		public String getName() {
+			return "dm_marker_api_initialized";
+		}
+
+		public Integer[] numArgs() {
+			return new Integer[]{0};
+		}
+
+		public ExceptionType[] thrown() {
+			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		}
+
+		public boolean isRestricted() {
+			return true;
+		}
+
+		public Boolean runAsync() {
+			return false;
+		}
+
+		public String docs() {
+			return "boolean {} Returns if the marker API is initialized.";
+		}
+
+		public Version since() {
+			return CHVersion.V3_3_1;
+		}
+
+		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).markerAPIInitialized(), t);
+		}
+	}
 }

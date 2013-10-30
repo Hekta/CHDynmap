@@ -7,6 +7,9 @@ Send a generic message to all web users, sender is the label for the sender of t
 ### boolean dm\_full\_radius\_renders\_paused():
 Returns if full and radius renders are paused.
 
+### boolean dm\_marker\_api\_initialized():
+Returns if the marker API is initialized.
+
 ### void dm\_render\_block(locationArray):
 Trigger update on tiles at the given block location.
 

@@ -6,18 +6,18 @@ Returns an associative array containing the ID of all markers in the markerset. 
 
 ### string dm\_create\_marker(setID, [optionArray]):
 Creates a marker and returns its ID. The option array is associative and not required, and all its keys are optional.
-<li>KEY - DEFAULT - DESCRIPTION - COMMENT</li>
-<li>center - world spawn - the center of the marker - only for circle markers, world is ignored</li>
-<li>corners - world spawn - the corners of the marker - only for area or polyline markers, world is ignored (and also y for area markers)</li>
-<li>icon - null - the icon ID of the marker, null for the markerset default icon - only for icon markers</li>
-<li>id - random - ID of the marker, must be unique within the set, if null or not given, an unique ID is generated</li>
-<li>label - markerID - the label of the marker</li>
-<li>label\_is\_html - false - sets if the label is processing as HTML</li>
-<li>location - world spawn - the location of the marker - only for icon markers, world is ignored</li>
-<li>persistent - false - sets if the label is persistent (saved and reloaded on restart), the markerset must be persistent - can not be changed later</li>
-<li>radius - 0 0 - the radius of the marker - only for circle markers</li>
-<li>type - ICON - the type of the marker, can be one of AREA, CIRCLE, ICON, or POLYLINE - can not be changed later</li>
-<li>world - first world - the world of the marker</li>
+- KEY - DEFAULT - DESCRIPTION - COMMENT
+- center - world spawn - the center of the marker - only for circle markers, world is ignored
+- corners - world spawn - the corners of the marker - only for area or polyline markers, world is ignored (and also y for area markers)
+- icon - null - the icon ID of the marker, null for the markerset default icon - only for icon markers
+- id - random - ID of the marker, must be unique within the set, if null or not given, an unique ID is generated
+- label - markerID - the label of the marker
+- label\_is\_html - false - sets if the label is processing as HTML
+- location - world spawn - the location of the marker - only for icon markers, world is ignored
+- persistent - false - sets if the label is persistent (saved and reloaded on restart), the markerset must be persistent - can not be changed later
+- radius - 0 0 - the radius of the marker - only for circle markers
+- type - ICON - the type of the marker, can be one of AREA, CIRCLE, ICON, or POLYLINE - can not be changed later
+- world - first world - the world of the marker
 
 ### void dm\_delete\_marker(setID, markerID):
 Deletes a marker in the set.

@@ -5,13 +5,11 @@ A class of functions to manage the Dynmap markersets.
 Returns an array of all markersets ID.
 
 ### string dm\_create\_markerset(newSetID, [optionArray]):
-Creates a markerset and returns its ID.
-
-The ID must be unique among markersets and must only contain numbers, letters, periods (.) and underscores (_). The option array is associative and not required, and all its keys are optional.
-<li>KEY - DEFAULT - DESCRIPTION - COMMENT</li>
-<li>allowed\_icons - null - an array of icons allowed in the markerset, null to unrestrict - restriction status can not be changed later, only the list of icons allowed could be modified</li>
-<li>label - setID - the markerset label</li>
-<li>persistent - false - sets if the markerset is persistent and can contain persistent markers - can not be changed later</li>
+Creates a markerset and returns its ID. The ID must be unique among markersets and must only contain numbers, letters, periods (.) and underscores (_). The option array is associative and not required, and all its keys are optional.
+- KEY - DEFAULT - DESCRIPTION - COMMENT
+- allowed\_icons - null - an array of icons allowed in the markerset, null to unrestrict - restriction status can not be changed later, only the list of icons allowed could be modified
+- label - setID - the markerset label
+- persistent - false - sets if the markerset is persistent and can contain persistent markers - can not be changed later
 
 ### void dm\_delete\_markerset(setID):
 Deletes a marker set.
