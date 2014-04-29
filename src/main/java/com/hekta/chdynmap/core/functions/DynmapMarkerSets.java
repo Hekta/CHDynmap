@@ -139,7 +139,7 @@ public class DynmapMarkerSets {
 			} else {
 				optionArray = Static.getArray(args[1], t);
 			}
-			Set<String> keys = optionArray.keySet();
+			Set<String> keys = optionArray.stringKeySet();
 			//set optional values
 			//allowed_icons
 			HashSet<MCDynmapIcon> allowedIcons;
@@ -199,7 +199,7 @@ public class DynmapMarkerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).delete();
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -217,7 +217,7 @@ public class DynmapMarkerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			Set<MCDynmapIcon> iconSet = CHDynmapStatic.getMarkerSet(args[0].val(), t).getAllowedIcons();
 			if (iconSet == null) {
-				return new CNull(t);
+				return CNull.NULL;
 			} else {
 				CArray allowedIcons = new CArray(t);
 				for(MCDynmapIcon allowedIcon : iconSet){
@@ -264,7 +264,7 @@ public class DynmapMarkerSets {
 				}
 				set.removeAllowedIcon(icon);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -302,7 +302,7 @@ public class DynmapMarkerSets {
 				throw new ConfigRuntimeException("The icon is not allowed for the marketset.", ExceptionType.PluginInternalException, t);
 			}
 			set.setDefaultIcon(icon);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -335,7 +335,7 @@ public class DynmapMarkerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setHiddenByDefault(Static.getBoolean(args[1]));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -388,7 +388,7 @@ public class DynmapMarkerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setLabel(args[1].val());
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -421,7 +421,7 @@ public class DynmapMarkerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setLayerPriority(Static.getInt32(args[1], t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -454,7 +454,7 @@ public class DynmapMarkerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setMinZoom(Static.getInt32(args[1], t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -488,7 +488,7 @@ public class DynmapMarkerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			if (set.labelIsShown() == null) {
-				return new CNull(t);
+				return CNull.NULL;
 			} else {
 				return new CBoolean(set.labelIsShown(), t);
 			}
@@ -516,7 +516,7 @@ public class DynmapMarkerSets {
 			} else {
 				throw new ConfigRuntimeException("Value should be a boolean or null.", ExceptionType.CastException, t);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 }

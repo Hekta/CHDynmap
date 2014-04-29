@@ -70,7 +70,7 @@ public class DynmapManagement {
 				senderLabel = "CommandHelper";
 			}
 			CHDynmapStatic.getDynmapAPI(t).sendBroadcastToWeb(senderLabel, args[0].val());
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -143,7 +143,7 @@ public class DynmapManagement {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getDynmapAPI(t).setPauseFullRadiusRenders(Static.getBoolean(args[0]));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -216,7 +216,7 @@ public class DynmapManagement {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getDynmapAPI(t).setPauseUpdateRenders(Static.getBoolean(args[0]));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -253,7 +253,7 @@ public class DynmapManagement {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getDynmapAPI(t).setChatToWebProcessingEnabled(Static.getBoolean(args[0]));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -297,7 +297,7 @@ public class DynmapManagement {
 				world = player.getWorld();
 			}
 			CHDynmapStatic.getDynmapAPI(t).triggerRenderOfBlock(ObjectGenerator.GetGenerator().location(args[0], world, t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -346,7 +346,7 @@ public class DynmapManagement {
 			} catch (IllegalArgumentException exception) {
 				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.FormatException, t);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
