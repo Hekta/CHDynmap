@@ -118,7 +118,7 @@ public class DynmapPlayers {
 				isVisible = Static.getBoolean(args[1]);
 			}
 			CHDynmapStatic.getDynmapAPI(t).setPlayerVisiblity(player, isVisible);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -166,7 +166,7 @@ public class DynmapPlayers {
 				plugin = args[2].val();
 			}
 			CHDynmapStatic.getDynmapAPI(t).assertPlayerVisibility(player, isVisible, plugin);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -214,7 +214,7 @@ public class DynmapPlayers {
 				plugin = args[2].val();
 			}
 			CHDynmapStatic.getDynmapAPI(t).assertPlayerInvisibility(player, isInvisible, plugin);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -298,7 +298,7 @@ public class DynmapPlayers {
 				message = args[1].val();
 			}
 			CHDynmapStatic.getDynmapAPI(t).postPlayerMessageToWeb(player, displayName, message);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -336,7 +336,7 @@ public class DynmapPlayers {
 				}
 			}
 			CHDynmapStatic.getDynmapAPI(t).postPlayerJoinToWeb(player, displayName);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -374,7 +374,7 @@ public class DynmapPlayers {
 				}
 			}
 			CHDynmapStatic.getDynmapAPI(t).postPlayerQuitToWeb(player, displayName);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 }

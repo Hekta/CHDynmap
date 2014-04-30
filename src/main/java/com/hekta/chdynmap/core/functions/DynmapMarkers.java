@@ -184,7 +184,7 @@ public class DynmapMarkers {
 			} else {
 				optionArray = Static.getArray(args[1], t);
 			}
-			Set<String> keys = optionArray.keySet();
+			Set<String> keys = optionArray.stringKeySet();
 			//set optional values
 			//type
 			MCDynmapMarkerType type;
@@ -365,7 +365,7 @@ public class DynmapMarkers {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).delete();
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -416,7 +416,7 @@ public class DynmapMarkers {
 				default:
 					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -455,7 +455,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapCircleMarker marker = CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t);
 			marker.setCenter(ObjectGenerator.GetGenerator().location(args[2], marker.getWorld(), t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -528,7 +528,7 @@ public class DynmapMarkers {
 				default:
 					throw new ConfigRuntimeException("There is no existing area or polyline markers with this id.", ExceptionType.NotFoundException, t);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -561,7 +561,7 @@ public class DynmapMarkers {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).setDescription(args[2].val());
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -647,7 +647,7 @@ public class DynmapMarkers {
 					((MCDynmapCircleMarker) marker).setFillStyle(fillStyle);
 					break;
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -686,7 +686,7 @@ public class DynmapMarkers {
 			} else {
 				throw new ConfigRuntimeException("The icon is not allowed for the markerset.", ExceptionType.PluginInternalException, t);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -742,7 +742,7 @@ public class DynmapMarkers {
 				isHTML = Static.getBoolean(args[3]);
 			}
 			marker.setLabel(args[2].val(), isHTML);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -841,7 +841,7 @@ public class DynmapMarkers {
 					((MCDynmapPolyLineMarker) marker).setLineStyle(lineStyle);
 					break;
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -880,7 +880,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapIconMarker marker = CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t);
 			marker.setLocation(ObjectGenerator.GetGenerator().location(args[2], marker.getWorld(), t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -902,7 +902,7 @@ public class DynmapMarkers {
 				throw new ConfigRuntimeException("An other marker with the same ID already exists in the new markerset.", ExceptionType.PluginInternalException, t);
 			}
 			marker.setSet(newSet);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -977,7 +977,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray radius = Static.getArray(args[2], t);
 			CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t).setRadius(Static.getDouble(radius.get("x", t), t), Static.getDouble(radius.get("z", t), t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -1020,7 +1020,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray range = Static.getArray(args[2], t);
 			CHDynmapStatic.getAreaMarker(args[0].val(), args[1].val(), t).setRangeY(Static.getDouble(range.get("top", t), t), Static.getDouble(range.get("bottom", t), t));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 

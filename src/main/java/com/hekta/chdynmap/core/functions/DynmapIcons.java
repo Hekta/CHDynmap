@@ -173,7 +173,7 @@ public class DynmapIcons {
 			} else {
 				icon.delete();
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -225,7 +225,7 @@ public class DynmapIcons {
 				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.IOException, t);
 			}
 			icon.setImage(image);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -266,7 +266,7 @@ public class DynmapIcons {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getIcon(args[0].val(), t).setLabel(args[1].val());
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 

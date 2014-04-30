@@ -139,7 +139,7 @@ public class DynmapPlayerSets {
 			} else {
 				optionArray = Static.getArray(args[1], t);
 			}
-			Set<String> keys = optionArray.keySet();
+			Set<String> keys = optionArray.stringKeySet();
 			//set optional values
 			//players
 			HashSet<MCOfflinePlayer> players = new HashSet<MCOfflinePlayer>();
@@ -196,7 +196,7 @@ public class DynmapPlayerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getPlayerSet(args[0].val(), t).delete();
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -242,7 +242,7 @@ public class DynmapPlayerSets {
 				players.add(Static.getServer().getOfflinePlayer(player.val()));
 			}
 			CHDynmapStatic.getPlayerSet(args[0].val(), t).setPlayers(players);
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -329,7 +329,7 @@ public class DynmapPlayerSets {
 				}
 				set.removePlayer(player);
 			}
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 
@@ -378,7 +378,7 @@ public class DynmapPlayerSets {
 
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getPlayerSet(args[0].val(), t).setSymmetric(Static.getBoolean(args[1]));
-			return new CVoid(t);
+			return CVoid.VOID;
 		}
 	}
 }
