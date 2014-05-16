@@ -52,6 +52,12 @@ Returns the line style array of the marker. Only for area, circle and polyline m
 ### string dm\_marker\_loc(setID, markerID):
 Returns the location of the marker. Only for icon markers.
 
+### int dm\_marker\_max\_zoom(setID, markerID):
+Returns the maximum zoom level of the marker (the marker will be hidden when the zoom level is above this setting). -1 means no maximum. This setting bypass the value returned by the dm\_markerset\_max\_zoom() function.
+
+### int dm\_marker\_min\_zoom(setID, markerID):
+Returns the minimum zoom level of the marker (the marker will be hidden when the zoom level is below this setting). -1 means no minimum. This setting bypass the value returned by the dm\_markerset\_min\_zoom() function.
+
 ### string dm\_marker\_normalized\_world(setID, markerID):
 Returns the normalized world of the marker (used for directory and URL names in Dynmap).
 
@@ -99,6 +105,12 @@ Sets the icon location of a marker. Only for icon markers.
 
 ### void dm\_set\_marker\_markerset(setID, markerID, newSetID):
 Changes the markerset of the marker.
+
+### void dm\_set\_marker\_max\_zoom(setID, markerID, int):
+Returns the maximum zoom level of the marker (the marker will be hidden when the zoom level is above this setting). -1 means no maximum. This setting bypass the value returned by the dm\_markerset\_max\_zoom() function.
+
+### void dm\_set\_marker\_min\_zoom(setID, markerID, int):
+Returns the minimum zoom level of the marker (the marker will be hidden when the zoom level is below this setting). -1 means no minimum. This setting bypass the value returned by the dm\_markerset\_min\_zoom() function.
 
 ### void dm\_set\_marker\_radius(setID, markerID, array):
 Sets the radius of the marker (array with "x" and "z" keys). Only for circle markers.

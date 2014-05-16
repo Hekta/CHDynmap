@@ -1,31 +1,5 @@
 package com.hekta.chdynmap.core.functions;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import com.laytonsmith.abstraction.MCLocation;
-import com.laytonsmith.abstraction.MCWorld;
-import com.laytonsmith.annotations.api;
-import com.laytonsmith.core.CHVersion;
-import com.laytonsmith.core.constructs.CArray;
-import com.laytonsmith.core.constructs.CBoolean;
-import com.laytonsmith.core.constructs.CInt;
-import com.laytonsmith.core.constructs.CDouble;
-import com.laytonsmith.core.constructs.CNull;
-import com.laytonsmith.core.constructs.Construct;
-import com.laytonsmith.core.constructs.CString;
-import com.laytonsmith.core.constructs.Target;
-import com.laytonsmith.core.constructs.CVoid;
-import com.laytonsmith.core.environments.Environment;
-import com.laytonsmith.core.exceptions.ConfigRuntimeException;
-import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
-import com.laytonsmith.core.ObjectGenerator;
-import com.laytonsmith.core.Static;
-import com.laytonsmith.PureUtilities.Common.StringUtils;
-import com.laytonsmith.PureUtilities.Version;
-
 import com.hekta.chdynmap.abstraction.MCDynmapAreaMarker;
 import com.hekta.chdynmap.abstraction.MCDynmapCircleMarker;
 import com.hekta.chdynmap.abstraction.MCDynmapIcon;
@@ -37,6 +11,29 @@ import com.hekta.chdynmap.abstraction.MCDynmapMarkerSet;
 import com.hekta.chdynmap.abstraction.MCDynmapPolyLineMarker;
 import com.hekta.chdynmap.abstraction.enums.MCDynmapMarkerType;
 import com.hekta.chdynmap.core.CHDynmapStatic;
+import com.laytonsmith.PureUtilities.Common.StringUtils;
+import com.laytonsmith.PureUtilities.Version;
+import com.laytonsmith.abstraction.MCLocation;
+import com.laytonsmith.abstraction.MCWorld;
+import com.laytonsmith.annotations.api;
+import com.laytonsmith.core.ArgumentValidation;
+import com.laytonsmith.core.CHVersion;
+import com.laytonsmith.core.ObjectGenerator;
+import com.laytonsmith.core.Static;
+import com.laytonsmith.core.constructs.CArray;
+import com.laytonsmith.core.constructs.CBoolean;
+import com.laytonsmith.core.constructs.CDouble;
+import com.laytonsmith.core.constructs.CInt;
+import com.laytonsmith.core.constructs.CNull;
+import com.laytonsmith.core.constructs.CString;
+import com.laytonsmith.core.constructs.CVoid;
+import com.laytonsmith.core.constructs.Construct;
+import com.laytonsmith.core.constructs.Target;
+import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.ConfigRuntimeException;
+import com.laytonsmith.core.functions.AbstractFunction;
+import com.laytonsmith.core.functions.Exceptions.ExceptionType;
+import java.util.Set;
 
 /**
  *
@@ -50,14 +47,17 @@ public class DynmapMarkers {
 
 	public static abstract class DynmapMarkerFunction extends AbstractFunction {
 
+		@Override
 		public boolean isRestricted() {
 			return true;
 		}
 
+		@Override
 		public Boolean runAsync() {
 			return false;
 		}
 
+		@Override
 		public Version since() {
 			return CHVersion.V3_3_1;
 		}
@@ -65,10 +65,12 @@ public class DynmapMarkers {
 
 	public static abstract class DynmapMarkerGetterFunction extends DynmapMarkerFunction {
 
+		@Override
 		public Integer[] numArgs() {
 			return new Integer[]{2};
 		}
 
+		@Override
 		public ExceptionType[] thrown() {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
 		}
@@ -76,10 +78,12 @@ public class DynmapMarkers {
 
 	public static abstract class DynmapMarkerSetterFunction extends DynmapMarkerFunction {
 
+		@Override
 		public Integer[] numArgs() {
 			return new Integer[]{3};
 		}
 
+		@Override
 		public ExceptionType[] thrown() {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException};
 		}
@@ -88,24 +92,29 @@ public class DynmapMarkers {
 	@api
 	public static class dm_all_markers extends DynmapMarkerFunction {
 
+		@Override
 		public String getName() {
 			return "dm_all_markers";
 		}
 
+		@Override
 		public Integer[] numArgs() {
 			return new Integer[]{1, 2};
 		}
 
+		@Override
 		public ExceptionType[] thrown() {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, [type]} Returns an associative array containing the ID of all markers in the markerset."
 					+ " If the type is given, only the markers of this type are returne."
 					+ " Type can be one of " + StringUtils.Join(MCDynmapMarkerType.values(), ", ", ", or ", " or ") + ".";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			MCDynmapMarkerType type;
@@ -146,18 +155,22 @@ public class DynmapMarkers {
 	@api
 	public static class dm_create_marker extends DynmapMarkerFunction {
 
+		@Override
 		public String getName() {
 			return "dm_create_marker";
 		}
 
+		@Override
 		public Integer[] numArgs() {
 			return new Integer[]{1, 2};
 		}
 
+		@Override
 		public ExceptionType[] thrown() {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, [optionArray]} Creates a marker and returns its ID."
 					+ " ---- The option array is associative and not required, and all its keys are optional."
@@ -175,6 +188,7 @@ public class DynmapMarkers {
 					+ " <li>world - first world - the world of the marker</li>";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			//create the option array
@@ -182,7 +196,7 @@ public class DynmapMarkers {
 			if (args.length == 1) {
 				optionArray = new CArray(t);
 			} else {
-				optionArray = Static.getArray(args[1], t);
+				optionArray = ArgumentValidation.getArray(args[1], t);
 			}
 			Set<String> keys = optionArray.stringKeySet();
 			//set optional values
@@ -200,7 +214,7 @@ public class DynmapMarkers {
 			//id
 			String id;
 			if (keys.contains("id")) {
-				id = optionArray.get("id").val();
+				id = optionArray.get("id", t).val();
 				if (set.getMarker(id) != null) {
 					throw new ConfigRuntimeException("\"" + id + "\" is already an existing marker.", ExceptionType.PluginInternalException, t);
 				}
@@ -210,9 +224,9 @@ public class DynmapMarkers {
 			//world
 			MCWorld world;
 			if (keys.contains("world")) {
-				world = Static.getServer().getWorld(optionArray.get("world").val());
+				world = Static.getServer().getWorld(optionArray.get("world", t).val());
 				if (world == null) {
-					throw new ConfigRuntimeException("Unknown world: " + optionArray.get("world").val(), ExceptionType.InvalidWorldException, t);
+					throw new ConfigRuntimeException("Unknown world: " + optionArray.get("world", t).val(), ExceptionType.InvalidWorldException, t);
 				}
 			} else {
 				world = Static.getServer().getWorlds().get(0);
@@ -220,21 +234,21 @@ public class DynmapMarkers {
 			//label
 			String label;
 			if (keys.contains("label")) {
-				label = optionArray.get("label").val();
+				label = optionArray.get("label", t).val();
 			} else {
 				label = id;
 			}
 			//label_is_html
 			boolean labelIsHTML;
 			if (keys.contains("label_is_html")) {
-				labelIsHTML = Static.getBoolean(optionArray.get("label_is_html"));
+				labelIsHTML = ArgumentValidation.getBoolean(optionArray.get("label_is_html", t), t);
 			} else {
 				labelIsHTML = false;
 			}
 			//persistent
 			boolean isPersistent;
 			if (keys.contains("persistent")) {
-				isPersistent = Static.getBoolean(optionArray.get("persistent"));
+				isPersistent = ArgumentValidation.getBoolean(optionArray.get("persistent", t), t);
 			} else {
 				isPersistent = false;
 			}
@@ -242,7 +256,7 @@ public class DynmapMarkers {
 			MCLocation center;
 			if (type == MCDynmapMarkerType.CIRCLE) {
 				if (keys.contains("center")) {
-					center = ObjectGenerator.GetGenerator().location(optionArray.get("center"), world, t);
+					center = ObjectGenerator.GetGenerator().location(optionArray.get("center", t), world, t);
 				} else {
 					center = world.getSpawnLocation();
 				}
@@ -250,32 +264,36 @@ public class DynmapMarkers {
 				center = null;
 			}
 			//corners
-			List<MCLocation> corners;
+			MCLocation[] corners;
 			if (type == MCDynmapMarkerType.AREA) {
-				corners = new ArrayList<MCLocation>();
 				if (keys.contains("corners")) {
-					CArray givenCorners = Static.getArray(optionArray.get("corners"), t);
+					CArray givenCorners = ArgumentValidation.getArray(optionArray.get("corners", t), t);
+					corners = new MCLocation[(int) givenCorners.size()];
 					if (givenCorners.inAssociativeMode()) {
 						throw new ConfigRuntimeException("The corners array must not be associative.", ExceptionType.CastException, t);
 					}
+					int i = 0;
 					for (Construct corner : givenCorners.asList()) {
-						corners.add(ObjectGenerator.GetGenerator().location(corner, world, t));
+						corners[i] = ObjectGenerator.GetGenerator().location(corner, world, t);
+						i++;
 					}
 				} else {
-					corners.add(world.getSpawnLocation());
+					corners = new MCLocation[]{world.getSpawnLocation()};
 				}
 			} else if (type == MCDynmapMarkerType.POLYLINE) {
-				corners = new ArrayList<MCLocation>();
 				if (keys.contains("corners")) {
-					CArray givenCorners = Static.getArray(optionArray.get("corners"), t);
+					CArray givenCorners = ArgumentValidation.getArray(optionArray.get("corners", t), t);
+					corners = new MCLocation[(int) givenCorners.size()];
 					if (givenCorners.inAssociativeMode()) {
 						throw new ConfigRuntimeException("The corners array must not be associative.", ExceptionType.CastException, t);
 					}
+					int i = 0;
 					for (Construct corner : givenCorners.asList()) {
-						corners.add(ObjectGenerator.GetGenerator().location(corner, world, t));
+						corners[i] = ObjectGenerator.GetGenerator().location(corner, world, t);
+						i++;
 					}
 				} else {
-					corners.add(world.getSpawnLocation());
+					corners = new MCLocation[]{world.getSpawnLocation()};
 				}
 			} else {
 				corners = null;
@@ -284,7 +302,7 @@ public class DynmapMarkers {
 			MCDynmapIcon icon;
 			if (type == MCDynmapMarkerType.ICON) {
 				if (keys.contains("icon")) {
-					icon = CHDynmapStatic.getIcon(optionArray.get("icon").val(), t);
+					icon = CHDynmapStatic.getIcon(optionArray.get("icon", t).val(), t);
 				} else {
 					icon = set.getDefaultIcon();
 				}
@@ -295,7 +313,7 @@ public class DynmapMarkers {
 			MCLocation iconLocation;
 			if (type == MCDynmapMarkerType.ICON) {
 				if (keys.contains("location")) {
-					iconLocation = ObjectGenerator.GetGenerator().location(optionArray.get("location"), world, t);
+					iconLocation = ObjectGenerator.GetGenerator().location(optionArray.get("location", t), world, t);
 				} else {
 					iconLocation = world.getSpawnLocation();
 				}
@@ -307,9 +325,9 @@ public class DynmapMarkers {
 			double radiusZ;
 			if (type == MCDynmapMarkerType.CIRCLE) {
 				if (keys.contains("radius")) {
-					CArray radius = Static.getArray(optionArray.get("radius"), t);
-					radiusX = Static.getDouble(radius.get("x", t), t);
-					radiusZ = Static.getDouble(radius.get("z", t), t);
+					CArray radius = ArgumentValidation.getArray(optionArray.get("radius", t), t);
+					radiusX = ArgumentValidation.getDouble(radius.get("x", t), t);
+					radiusZ = ArgumentValidation.getDouble(radius.get("z", t), t);
 				} else {
 					radiusX = 0;
 					radiusZ = 0;
@@ -347,22 +365,27 @@ public class DynmapMarkers {
 	@api
 	public static class dm_delete_marker extends DynmapMarkerFunction {
 
+		@Override
 		public String getName() {
 			return "dm_delete_marker";
 		}
 
+		@Override
 		public Integer[] numArgs() {
 			return new Integer[]{2};
 		}
 
+		@Override
 		public ExceptionType[] thrown() {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID} Deletes a marker in the set.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).delete();
 			return CVoid.VOID;
@@ -372,14 +395,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_boosted extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_boosted";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns if the marker resolution is boosted. Only for area and circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			switch (marker.getType()) {
@@ -396,22 +422,25 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_boosted extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_boosted";
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, boolean} Sets if the marker resolution is boosted. Only for area and circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			switch (marker.getType()) {
 				case AREA:
-					((MCDynmapAreaMarker) marker).setBoosted(Static.getBoolean(args[2]));
+					((MCDynmapAreaMarker) marker).setBoosted(ArgumentValidation.getBoolean(args[2], t));
 					break;
 				case CIRCLE:
-					((MCDynmapCircleMarker) marker).setBoosted(Static.getBoolean(args[2]));
+					((MCDynmapCircleMarker) marker).setBoosted(ArgumentValidation.getBoolean(args[2], t));
 					break;
 				default:
 					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
@@ -423,14 +452,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_center extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_center";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns the location of the marker center. Only for circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return ObjectGenerator.GetGenerator().location(CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t).getCenter());
 		}
@@ -439,6 +471,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_center extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_center";
 		}
@@ -448,10 +481,12 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, locationArray} Sets the center of a marker. Only for circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapCircleMarker marker = CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t);
 			marker.setCenter(ObjectGenerator.GetGenerator().location(args[2], marker.getWorld(), t));
@@ -462,17 +497,20 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_corners extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_corners";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns the corners location of the marker. Only for area and polyline markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
-			List<MCLocation> corners;
+			MCLocation[] corners;
 			switch (marker.getType()) {
 				case AREA:
 					corners = ((MCDynmapAreaMarker) marker).getCorners();
@@ -494,6 +532,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_corners extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_corners";
 		}
@@ -503,20 +542,24 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException, ExceptionType.FormatException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, array} Sets the location of the marker corners (array of location arrays, world is ignored, and for area markers y is ignored). Only for area and polyline markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
-			CArray givenCorners = Static.getArray(args[2], t);
+			CArray givenCorners = ArgumentValidation.getArray(args[2], t);
 			if (givenCorners.inAssociativeMode()) {
 				throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
 			}
-			List<MCLocation> corners = new ArrayList<MCLocation>();
+			MCLocation[] corners = new MCLocation[(int) givenCorners.size()];
 			MCWorld world = marker.getWorld();
+			int i = 0;
 			for (Construct corner : givenCorners.asList()) {
-				corners.add(ObjectGenerator.GetGenerator().location(corner, world, t));
+				corners[i] = ObjectGenerator.GetGenerator().location(corner, world, t);
+				i++;
 			}
 			switch (marker.getType()) {
 				case AREA:
@@ -535,14 +578,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_description extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_label";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the description of the marker.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getDescription(), t);
 		}
@@ -551,14 +597,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_description extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_description";
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, htmlDescription} Sets the description of the marker (in HTML).";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).setDescription(args[2].val());
 			return CVoid.VOID;
@@ -568,14 +617,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_fill_style extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_fill_style";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns the fill style array of the marker. Only for area and circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			MCDynmapMarkerFillStyle fillStyle;
@@ -599,6 +651,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_fill_style extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_fill_style";
 		}
@@ -608,14 +661,16 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, array} Sets the marker fill style (array with \"color\" and \"opacity\" optional keys, color is a color r g b array, and opacity a number between 0 and 1 inclusive)."
 					+ " Only for area and circle markers";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
-			CArray styleArray = Static.getArray(args[2], t);
+			CArray styleArray = ArgumentValidation.getArray(args[2], t);
 			Set keys = styleArray.keySet();
 			MCDynmapMarkerFillStyle fillStyle;
 			switch (marker.getType()) {
@@ -629,10 +684,10 @@ public class DynmapMarkers {
 					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
 			}
 			if (keys.contains("color")) {
-				fillStyle.setColor(ObjectGenerator.GetGenerator().color(Static.getArray(styleArray.get("color"), t), t));
+				fillStyle.setColor(ObjectGenerator.GetGenerator().color(ArgumentValidation.getArray(styleArray.get("color", t), t), t));
 			}
 			if (keys.contains("opacity")) {
-				double opacity = Static.getDouble(styleArray.get("opacity"), t);
+				double opacity = ArgumentValidation.getDouble(styleArray.get("opacity", t), t);
 				if ((opacity < 0) || (opacity > 1)) {
 					throw new ConfigRuntimeException("Opacity must be between 0 and 1 inclusive.", ExceptionType.RangeException, t);
 				} else {
@@ -654,14 +709,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_icon extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_icon";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the icon ID of the marker. Only for icon markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t).getIcon().getId(), t);
 		}
@@ -670,14 +728,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_icon extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_icon";
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, iconID} Sets the icon of a marker. Only for icon markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapIconMarker marker = CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t);
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[2].val(), t);
@@ -693,14 +754,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_label extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_label";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the label of the marker.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getLabel(), t);
 		}
@@ -709,14 +773,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_label_is_html extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_label_is_html";
 		}
 
+		@Override
 		public String docs() {
 			return "boolean {setID, markerID} Returns if the label of the marker is processed as HTML.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CBoolean(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).isLabelMarkup(), t);
 		}
@@ -725,21 +792,24 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_label extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_label";
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, label, [isHTML]} Sets the label of the marker, isHTML is a boolean, if true, label will be processed as HTML.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			boolean isHTML;
 			if (args.length == 3) {
 				isHTML = false;
 			} else {
-				isHTML = Static.getBoolean(args[3]);
+				isHTML = ArgumentValidation.getBoolean(args[3], t);
 			}
 			marker.setLabel(args[2].val(), isHTML);
 			return CVoid.VOID;
@@ -749,14 +819,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_line_style extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_line_style";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns the line style array of the marker. Only for area, circle and polyline markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			MCDynmapMarkerLineStyle lineStyle;
@@ -784,6 +857,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_line_style extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_line_style";
 		}
@@ -793,14 +867,16 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException, ExceptionType.FormatException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, array} Sets the marker line style (array with \"color\", \"opacity\" and \"weight\" optional keys, color is a color r g b array, opacity a number between 0 and 1 inclusive and weight is an integer)."
 					+ " Only for area, circle and polyline markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
-			CArray styleArray = Static.getArray(args[2], t);
+			CArray styleArray = ArgumentValidation.getArray(args[2], t);
 			Set keys = styleArray.keySet();
 			MCDynmapMarkerLineStyle lineStyle;
 			switch (marker.getType()) {
@@ -817,10 +893,10 @@ public class DynmapMarkers {
 					throw new ConfigRuntimeException("There is no existing area, circle or polyline markers with this id.", ExceptionType.NotFoundException, t);
 			}
 			if (keys.contains("color")) {
-				lineStyle.setColor(ObjectGenerator.GetGenerator().color(Static.getArray(styleArray.get("color"), t), t));
+				lineStyle.setColor(ObjectGenerator.GetGenerator().color(ArgumentValidation.getArray(styleArray.get("color", t), t), t));
 			}
 			if (keys.contains("opacity")) {
-				double opacity = Static.getDouble(styleArray.get("opacity"), t);
+				double opacity = ArgumentValidation.getDouble(styleArray.get("opacity", t), t);
 				if ((opacity < 0) || (opacity > 1)) {
 					throw new ConfigRuntimeException("Opacity must be between 0 and 1 inclusive.", ExceptionType.RangeException, t);
 				} else {
@@ -828,7 +904,7 @@ public class DynmapMarkers {
 				}
 			}
 			if (keys.contains("weight")) {
-				lineStyle.setWeight(Static.getInt32(styleArray.get("weight"), t));
+				lineStyle.setWeight(ArgumentValidation.getInt32(styleArray.get("weight", t), t));
 			}
 			switch (marker.getType()) {
 				case AREA:
@@ -848,14 +924,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_loc extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_loc";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the location of the marker. Only for icon markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return ObjectGenerator.GetGenerator().location(CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t).getLocation());
 		}
@@ -864,6 +943,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_loc extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_loc";
 		}
@@ -873,10 +953,12 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, locationArray} Sets the icon location of a marker. Only for icon markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapIconMarker marker = CHDynmapStatic.getIconMarker(args[0].val(), args[1].val(), t);
 			marker.setLocation(ObjectGenerator.GetGenerator().location(args[2], marker.getWorld(), t));
@@ -887,14 +969,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_markerset extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_markerset";
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, newSetID} Changes the markerset of the marker.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			MCDynmapMarkerSet newSet = CHDynmapStatic.getMarkerSet(args[2].val(), t);
@@ -909,14 +994,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_normalized_world extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_normalized_world";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the normalized world of the marker (used for directory and URL names in Dynmap).";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getNormalizedWorld(), t);
 		}
@@ -925,14 +1013,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_persistent extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_persistent";
 		}
 
+		@Override
 		public String docs() {
 			return "boolean {setID, markerID} Returns if the marker is persistent.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CBoolean(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).isPersistent(), t);
 		}
@@ -941,14 +1032,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_radius extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_radius";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns the radius of the marker. Only for circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapCircleMarker marker = CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t);
 			CArray radius = new CArray(t);
@@ -961,6 +1055,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_radius extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_radius";
 		}
@@ -970,13 +1065,15 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, array} Sets the radius of the marker (array with \"x\" and \"z\" keys). Only for circle markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			CArray radius = Static.getArray(args[2], t);
-			CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t).setRadius(Static.getDouble(radius.get("x", t), t), Static.getDouble(radius.get("z", t), t));
+			CArray radius = ArgumentValidation.getArray(args[2], t);
+			CHDynmapStatic.getCircleMarker(args[0].val(), args[1].val(), t).setRadius(ArgumentValidation.getDouble(radius.get("x", t), t), ArgumentValidation.getDouble(radius.get("z", t), t));
 			return CVoid.VOID;
 		}
 	}
@@ -984,14 +1081,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_range_height extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_range_height";
 		}
 
+		@Override
 		public String docs() {
 			return "array {setID, markerID} Returns the range height of the marker. Only for area markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapAreaMarker marker = CHDynmapStatic.getAreaMarker(args[0].val(), args[1].val(), t);
 			CArray range = new CArray(t);
@@ -1004,6 +1104,7 @@ public class DynmapMarkers {
 	@api
 	public static class dm_set_marker_range_height extends DynmapMarkerSetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_set_marker_range_height";
 		}
@@ -1013,13 +1114,15 @@ public class DynmapMarkers {
 			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
 		}
 
+		@Override
 		public String docs() {
 			return "void {setID, markerID, array} Sets the range height of a marker (array with \"top\" and \"bottom\" keys). Only for area markers.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			CArray range = Static.getArray(args[2], t);
-			CHDynmapStatic.getAreaMarker(args[0].val(), args[1].val(), t).setRangeY(Static.getDouble(range.get("top", t), t), Static.getDouble(range.get("bottom", t), t));
+			CArray range = ArgumentValidation.getArray(args[2], t);
+			CHDynmapStatic.getAreaMarker(args[0].val(), args[1].val(), t).setRangeY(ArgumentValidation.getDouble(range.get("top", t), t), ArgumentValidation.getDouble(range.get("bottom", t), t));
 			return CVoid.VOID;
 		}
 	}
@@ -1027,14 +1130,17 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_type extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_type";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the type of the marker. Can be one of " + StringUtils.Join(MCDynmapMarkerType.values(), ", ", ", ", " or ") + ", or UNKNOWN.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getType().name(), t);
 		}
@@ -1043,16 +1149,101 @@ public class DynmapMarkers {
 	@api
 	public static class dm_marker_world extends DynmapMarkerGetterFunction {
 
+		@Override
 		public String getName() {
 			return "dm_marker_world";
 		}
 
+		@Override
 		public String docs() {
 			return "string {setID, markerID} Returns the world of the marker.";
 		}
 
+		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getWorld().getName(), t);
+		}
+	}
+
+	@api
+	public static class dm_marker_min_zoom extends DynmapMarkerGetterFunction {
+
+		@Override
+		public String getName() {
+			return "dm_marker_min_zoom";
+		}
+
+		@Override
+		public String docs() {
+			return "int {setID, markerID} Returns the minimum zoom level of the marker (the marker will be hidden when the zoom level is below this setting)."
+				+ " -1 means no minimum. This setting bypass the value returned by the {{function|dm_markerset_min_zoom}} function.";
+		}
+
+		@Override
+		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+			return new CInt(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getMinZoom(), t);
+		}
+	}
+
+	@api
+	public static class dm_set_marker_min_zoom extends DynmapMarkerSetterFunction {
+
+		@Override
+		public String getName() {
+			return "dm_set_marker_min_zoom";
+		}
+
+		@Override
+		public String docs() {
+			return "void {setID, markerID, int} Sets the minimum zoom level of the marker (the marker will be hidden when the zoom level is below this setting)."
+				+ " -1 means no minimum. This setting bypass the value returned by the {{function|dm_markerset_min_zoom}} function.";
+		}
+
+		@Override
+		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+			CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).setMinZoom(ArgumentValidation.getInt32(args[2], t));
+			return CVoid.VOID;
+		}
+	}
+
+	@api
+	public static class dm_marker_max_zoom extends DynmapMarkerGetterFunction {
+
+		@Override
+		public String getName() {
+			return "dm_marker_max_zoom";
+		}
+
+		@Override
+		public String docs() {
+			return "int {setID, markerID} Returns the maximum zoom level of the marker (the marker will be hidden when the zoom level is above this setting)."
+				+ " -1 means no maximum. This setting bypass the value returned by the {{function|dm_markerset_max_zoom}} function.";
+		}
+
+		@Override
+		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+			return new CInt(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).getMaxZoom(), t);
+		}
+	}
+
+	@api
+	public static class dm_set_marker_max_zoom extends DynmapMarkerSetterFunction {
+
+		@Override
+		public String getName() {
+			return "dm_set_marker_max_zoom";
+		}
+
+		@Override
+		public String docs() {
+			return "void {setID, markerID, int} Sets the maximum zoom level of the marker (the marker will be hidden when the zoom level is above this setting)."
+				+ " -1 means no maximum. This setting bypass the value returned by the {{function|dm_markerset_max_zoom}} function.";
+		}
+
+		@Override
+		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+			CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).setMaxZoom(ArgumentValidation.getInt32(args[2], t));
+			return CVoid.VOID;
 		}
 	}
 }

@@ -1,12 +1,18 @@
 package com.hekta.chdynmap.abstraction.bukkit;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
+import com.hekta.chdynmap.abstraction.MCDynmapAreaMarker;
+import com.hekta.chdynmap.abstraction.MCDynmapCircleMarker;
+import com.hekta.chdynmap.abstraction.MCDynmapIcon;
+import com.hekta.chdynmap.abstraction.MCDynmapIconMarker;
+import com.hekta.chdynmap.abstraction.MCDynmapMarkerSet;
+import com.hekta.chdynmap.abstraction.MCDynmapMarker;
+import com.hekta.chdynmap.abstraction.MCDynmapPolyLineMarker;
+import com.laytonsmith.abstraction.Implementation;
 import com.laytonsmith.abstraction.MCLocation;
 import com.laytonsmith.abstraction.MCWorld;
-
+import com.laytonsmith.annotations.abstraction;
+import java.util.List;
+import java.util.Set;
 import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.CircleMarker;
 import org.dynmap.markers.GenericMarker;
@@ -15,101 +21,127 @@ import org.dynmap.markers.MarkerIcon;
 import org.dynmap.markers.MarkerSet;
 import org.dynmap.markers.PolyLineMarker;
 
-import com.hekta.chdynmap.abstraction.MCDynmapAreaMarker;
-import com.hekta.chdynmap.abstraction.MCDynmapCircleMarker;
-import com.hekta.chdynmap.abstraction.MCDynmapIcon;
-import com.hekta.chdynmap.abstraction.MCDynmapIconMarker;
-import com.hekta.chdynmap.abstraction.MCDynmapMarkerSet;
-import com.hekta.chdynmap.abstraction.MCDynmapMarker;
-import com.hekta.chdynmap.abstraction.MCDynmapPolyLineMarker;
-
 /**
  *
  * @author Hekta
  */
+@abstraction(type = Implementation.Type.BUKKIT)
 public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 
-	MarkerSet set;
+	private final MarkerSet _set;
 
 	public BukkitMCDynmapMarkerSet(MarkerSet markerSet) {
-		this.set = markerSet;
+		_set = markerSet;
 	}
 
-	public MarkerSet getConcrete() {
-		return set;
+	public BukkitMCDynmapMarkerSet(Object object) {
+		this((MarkerSet) object);
 	}
 
-	public Set<MCDynmapMarker> getMarkers() {
-		Set<MCDynmapMarker> markers = new HashSet<MCDynmapMarker>();
-		for (AreaMarker marker : set.getAreaMarkers()) {
-			markers.add(new BukkitMCDynmapAreaMarker(marker));
+	@Override
+	public MarkerSet getHandle() {
+		return _set;
+	}
+
+	@Override
+	public MCDynmapMarker[] getMarkers() {
+		Set<AreaMarker> ams = _set.getAreaMarkers();
+		Set<CircleMarker> cms = _set.getCircleMarkers();
+		Set<Marker> ims = _set.getMarkers();
+		Set<PolyLineMarker> pms = _set.getPolyLineMarkers();
+		MCDynmapMarker[] markers = new MCDynmapMarker[ams.size() + cms.size() + ims.size() + pms.size()];
+		int i = 0;
+		for (AreaMarker marker : ams) {
+			markers[i] = new BukkitMCDynmapAreaMarker(marker);
+			i++;
 		}
-		for (CircleMarker marker : set.getCircleMarkers()) {
-			markers.add(new BukkitMCDynmapCircleMarker(marker));
+		for (CircleMarker marker : cms) {
+			markers[i] = new BukkitMCDynmapCircleMarker(marker);
+			i++;
 		}
-		for (Marker marker : set.getMarkers()) {
-			markers.add(new BukkitMCDynmapIconMarker(marker));
+		for (Marker marker : ims) {
+			markers[i] = new BukkitMCDynmapIconMarker(marker);
+			i++;
 		}
-		for (PolyLineMarker marker : set.getPolyLineMarkers()) {
-			markers.add(new BukkitMCDynmapPolyLineMarker(marker));
+		for (PolyLineMarker marker : pms) {
+			markers[i] = new BukkitMCDynmapPolyLineMarker(marker);
+			i++;
 		}
 		return markers;
 	}
 
-	public Set<MCDynmapAreaMarker> getAreaMarkers() {
-		Set<MCDynmapAreaMarker> markers = new HashSet<MCDynmapAreaMarker>();
-		for (AreaMarker marker : set.getAreaMarkers()) {
-			markers.add(new BukkitMCDynmapAreaMarker(marker));
+	@Override
+	public MCDynmapAreaMarker[] getAreaMarkers() {
+		Set<AreaMarker> ms = _set.getAreaMarkers();
+		MCDynmapAreaMarker[] markers = new MCDynmapAreaMarker[ms.size()];
+		int i = 0;
+		for (AreaMarker marker : ms) {
+			markers[i] = new BukkitMCDynmapAreaMarker(marker);
+			i++;
 		}
 		return markers;
 	}
 
-	public Set<MCDynmapCircleMarker> getCircleMarkers() {
-		Set<MCDynmapCircleMarker> markers = new HashSet<MCDynmapCircleMarker>();
-		for (CircleMarker marker : set.getCircleMarkers()) {
-			markers.add(new BukkitMCDynmapCircleMarker(marker));
+	@Override
+	public MCDynmapCircleMarker[] getCircleMarkers() {
+		Set<CircleMarker> ms = _set.getCircleMarkers();
+		MCDynmapCircleMarker[] markers = new MCDynmapCircleMarker[ms.size()];
+		int i = 0;
+		for (CircleMarker marker : ms) {
+			markers[i] = new BukkitMCDynmapCircleMarker(marker);
+			i++;
 		}
 		return markers;
 	}
 
-	public Set<MCDynmapIconMarker> getIconMarkers() {
-		Set<MCDynmapIconMarker> markers = new HashSet<MCDynmapIconMarker>();
-		for (Marker marker : set.getMarkers()) {
-			markers.add(new BukkitMCDynmapIconMarker(marker));
+	@Override
+	public MCDynmapIconMarker[] getIconMarkers() {
+		Set<Marker> ms = _set.getMarkers();
+		MCDynmapIconMarker[] markers = new MCDynmapIconMarker[ms.size()];
+		int i = 0;
+		for (Marker marker : ms) {
+			markers[i] = new BukkitMCDynmapIconMarker(marker);
+			i++;
 		}
 		return markers;
 	}
 
-	public Set<MCDynmapPolyLineMarker> getPolyLineMarkers() {
-		Set<MCDynmapPolyLineMarker> markers = new HashSet<MCDynmapPolyLineMarker>();
-		for (PolyLineMarker marker : set.getPolyLineMarkers()) {
-			markers.add(new BukkitMCDynmapPolyLineMarker(marker));
+	@Override
+	public MCDynmapPolyLineMarker[] getPolyLineMarkers() {
+		Set<PolyLineMarker> ms = _set.getPolyLineMarkers();
+		MCDynmapPolyLineMarker[] markers = new MCDynmapPolyLineMarker[ms.size()];
+		int i = 0;
+		for (PolyLineMarker marker : ms) {
+			markers[i] = new BukkitMCDynmapPolyLineMarker(marker);
+			i++;
 		}
 		return markers;
 	}
 
+	@Override
 	public MCDynmapMarker getMarker(String id) {
-		AreaMarker am = set.findAreaMarker(id);
+		AreaMarker am = _set.findAreaMarker(id);
 		if (am != null) {
 			return new BukkitMCDynmapAreaMarker(am);
 		}
-		CircleMarker cm = set.findCircleMarker(id);
+		CircleMarker cm = _set.findCircleMarker(id);
 		if (cm != null) {
 			return new BukkitMCDynmapCircleMarker(cm);
 		}
-		Marker ic = set.findMarker(id);
+		Marker ic = _set.findMarker(id);
 		if (ic != null) {
 			return new BukkitMCDynmapIconMarker(ic);
 		}
-		PolyLineMarker pm = set.findPolyLineMarker(id);
+		PolyLineMarker pm = _set.findPolyLineMarker(id);
 		if (pm != null) {
 			return new BukkitMCDynmapPolyLineMarker(pm);
 		}
 		return null;
 	}
 
+	@Override
 	public MCDynmapAreaMarker getAreaMarker(String id) {
-		AreaMarker marker = set.findAreaMarker(id);
+		AreaMarker marker = _set.findAreaMarker(id);
 		if (marker != null) {
 			return new BukkitMCDynmapAreaMarker(marker);
 		} else {
@@ -117,8 +149,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapCircleMarker getCircleMarker(String id) {
-		CircleMarker marker = set.findCircleMarker(id);
+		CircleMarker marker = _set.findCircleMarker(id);
 		if (marker != null) {
 			return new BukkitMCDynmapCircleMarker(marker);
 		} else {
@@ -126,8 +159,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapIconMarker getIconMarker(String id) {
-		Marker marker = set.findMarker(id);
+		Marker marker = _set.findMarker(id);
 		if (marker != null) {
 			return new BukkitMCDynmapIconMarker(marker);
 		} else {
@@ -135,8 +169,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapPolyLineMarker getPolyLineMarker(String id) {
-		PolyLineMarker marker = set.findPolyLineMarker(id);
+		PolyLineMarker marker = _set.findPolyLineMarker(id);
 		if (marker != null) {
 			return new BukkitMCDynmapPolyLineMarker(marker);
 		} else {
@@ -144,28 +179,30 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapMarker getMarkerByLabel(String label) {
-		GenericMarker marker = set.findAreaMarkerByLabel(label);
+		GenericMarker marker = _set.findAreaMarkerByLabel(label);
 		if (marker != null) {
-			return new BukkitMCDynmapMarker(marker);
+			return new BukkitMCDynmapAreaMarker((AreaMarker) marker);
 		}
-		marker = set.findCircleMarkerByLabel(label);
+		marker = _set.findCircleMarkerByLabel(label);
 		if (marker != null) {
-			return new BukkitMCDynmapMarker(marker);
+			return new BukkitMCDynmapCircleMarker((CircleMarker) marker);
 		}
-		marker = set.findMarkerByLabel(label);
+		marker = _set.findMarkerByLabel(label);
 		if (marker != null) {
-			return new BukkitMCDynmapMarker(marker);
+			return new BukkitMCDynmapIconMarker((Marker) marker);
 		}
-		marker = set.findPolyLineMarkerByLabel(label);
+		marker = _set.findPolyLineMarkerByLabel(label);
 		if (marker != null) {
-			return new BukkitMCDynmapMarker(marker);
+			return new BukkitMCDynmapPolyLineMarker((PolyLineMarker) marker);
 		}
 		return null;
 	}
 
+	@Override
 	public MCDynmapAreaMarker getAreaMarkerByLabel(String label) {
-		AreaMarker marker = set.findAreaMarkerByLabel(label);
+		AreaMarker marker = _set.findAreaMarkerByLabel(label);
 		if (marker != null) {
 			return new BukkitMCDynmapAreaMarker(marker);
 		} else {
@@ -173,8 +210,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapCircleMarker getCircleMarkerByLabel(String label) {
-		CircleMarker marker = set.findCircleMarkerByLabel(label);
+		CircleMarker marker = _set.findCircleMarkerByLabel(label);
 		if (marker != null) {
 			return new BukkitMCDynmapCircleMarker(marker);
 		} else {
@@ -182,8 +220,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapIconMarker getIconMarkerByLabel(String label) {
-		Marker marker = set.findMarkerByLabel(label);
+		Marker marker = _set.findMarkerByLabel(label);
 		if (marker != null) {
 			return new BukkitMCDynmapIconMarker(marker);
 		} else {
@@ -191,8 +230,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapPolyLineMarker getPolyLineMarkerByLabel(String label) {
-		PolyLineMarker marker = set.findPolyLineMarkerByLabel(label);
+		PolyLineMarker marker = _set.findPolyLineMarkerByLabel(label);
 		if (marker != null) {
 			return new BukkitMCDynmapPolyLineMarker(marker);
 		} else {
@@ -200,6 +240,25 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
+	public MCDynmapAreaMarker createAreaMarker(String id, String label, boolean isHTML, MCWorld world, MCLocation[] corners, boolean isPersistent) {
+		double[] Xs = new double[corners.length];
+		double[] Zs = new double[corners.length];
+		int i = 0;
+		for (MCLocation location : corners) {
+			Xs[i] = location.getX();
+			Zs[i] = location.getZ();
+			i++;
+		}
+		AreaMarker marker = _set.createAreaMarker(id, label, isHTML, world.getName(), Xs, Zs, isPersistent);
+		if (marker != null) {
+			return new BukkitMCDynmapAreaMarker(marker);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public MCDynmapAreaMarker createAreaMarker(String id, String label, boolean isHTML, MCWorld world, List<MCLocation> corners, boolean isPersistent) {
 		int size = corners.size();
 		double[] Xs = new double[size];
@@ -210,7 +269,7 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 			Zs[i] = location.getZ();
 			i++;
 		}
-		AreaMarker marker = set.createAreaMarker(id, label, isHTML, world.getName(), Xs, Zs, isPersistent);
+		AreaMarker marker = _set.createAreaMarker(id, label, isHTML, world.getName(), Xs, Zs, isPersistent);
 		if (marker != null) {
 			return new BukkitMCDynmapAreaMarker(marker);
 		} else {
@@ -218,8 +277,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapCircleMarker createCircleMarker(String id, String label, boolean isHTML, MCLocation center, double radiusX, double radiusZ, boolean isPersistent) {
-		CircleMarker marker = set.createCircleMarker(id, label, isHTML, center.getWorld().getName(), center.getX(), center.getY(), center.getZ(), radiusX, radiusZ, isPersistent);
+		CircleMarker marker = _set.createCircleMarker(id, label, isHTML, center.getWorld().getName(), center.getX(), center.getY(), center.getZ(), radiusX, radiusZ, isPersistent);
 		if (marker != null) {
 			return new BukkitMCDynmapCircleMarker(marker);
 		} else {
@@ -227,8 +287,9 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public MCDynmapIconMarker createIconMarker(String id, String label, boolean isHTML, MCLocation location, MCDynmapIcon icon, boolean isPersistent) {
-		Marker marker = set.createMarker(id, label, isHTML, location.getWorld().getName(), location.getX(), location.getY(), location.getZ(), ((BukkitMCDynmapIcon) icon).getConcrete(), isPersistent);
+		Marker marker = _set.createMarker(id, label, isHTML, location.getWorld().getName(), location.getX(), location.getY(), location.getZ(), ((BukkitMCDynmapIcon) icon).getHandle(), isPersistent);
 		if (marker != null) {
 			return new BukkitMCDynmapIconMarker(marker);
 		} else {
@@ -236,6 +297,27 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
+	public MCDynmapPolyLineMarker createPolyLineMarker(String id, String label, boolean isHTML, MCWorld world, MCLocation[] corners, boolean isPersistent) {
+		double[] Xs = new double[corners.length];
+		double[] Ys = new double[corners.length];
+		double[] Zs = new double[corners.length];
+		int i = 0;
+		for (MCLocation location : corners) {
+			Xs[i] = location.getX();
+			Ys[i] = location.getY();
+			Zs[i] = location.getZ();
+			i++;
+		}
+		PolyLineMarker marker = _set.createPolyLineMarker(id, label, isHTML, world.getName(), Xs, Ys, Zs, isPersistent);
+		if (marker != null) {
+			return new BukkitMCDynmapPolyLineMarker(marker);
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public MCDynmapPolyLineMarker createPolyLineMarker(String id, String label, boolean isHTML, MCWorld world, List<MCLocation> corners, boolean isPersistent) {
 		int size = corners.size();
 		double[] Xs = new double[size];
@@ -248,7 +330,7 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 			Zs[i] = location.getZ();
 			i++;
 		}
-		PolyLineMarker marker = set.createPolyLineMarker(id, label, isHTML, world.getName(), Xs, Ys, Zs, isPersistent);
+		PolyLineMarker marker = _set.createPolyLineMarker(id, label, isHTML, world.getName(), Xs, Ys, Zs, isPersistent);
 		if (marker != null) {
 			return new BukkitMCDynmapPolyLineMarker(marker);
 		} else {
@@ -256,31 +338,40 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public String getId() {
-		return set.getMarkerSetID();
+		return _set.getMarkerSetID();
 	}
 
+	@Override
 	public String getLabel() {
-		return set.getMarkerSetLabel();
+		return _set.getMarkerSetLabel();
 	}
 
+	@Override
 	public void setLabel(String label) {
-		set.setMarkerSetLabel(label);
+		_set.setMarkerSetLabel(label);
 	}
 
+	@Override
 	public boolean isPersistent() {
-		return set.isMarkerSetPersistent();
+		return _set.isMarkerSetPersistent();
 	}
 
+	@Override
 	public boolean isRestricted() {
-		return (set.getAllowedMarkerIcons() != null);
+		return (_set.getAllowedMarkerIcons() != null);
 	}
 
-	public Set<MCDynmapIcon> getAllowedIcons() {
-		if (this.isRestricted()) {
-			Set<MCDynmapIcon> icons = new HashSet<MCDynmapIcon>();
-			for (MarkerIcon icon : set.getAllowedMarkerIcons()) {
-				icons.add(new BukkitMCDynmapIcon(icon));
+	@Override
+	public MCDynmapIcon[] getAllowedIcons() {
+		if (isRestricted()) {
+			Set<MarkerIcon> is = _set.getAllowedMarkerIcons();
+			MCDynmapIcon[] icons = new MCDynmapIcon[is.size()];
+			int i = 0;
+			for (MarkerIcon icon : is) {
+				icons[i] = new BukkitMCDynmapIcon(icon);
+				i++;
 			}
 			return icons;
 		} else {
@@ -288,67 +379,95 @@ public class BukkitMCDynmapMarkerSet implements MCDynmapMarkerSet {
 		}
 	}
 
+	@Override
 	public boolean iconIsAllowed(MCDynmapIcon icon) {
-		return set.isAllowedMarkerIcon(((BukkitMCDynmapIcon) icon).getConcrete());
+		return _set.isAllowedMarkerIcon(((BukkitMCDynmapIcon) icon).getHandle());
 	}
 
+	@Override
 	public void addAllowedIcon(MCDynmapIcon icon) {
-		set.addAllowedMarkerIcon(((BukkitMCDynmapIcon) icon).getConcrete());
+		_set.addAllowedMarkerIcon(((BukkitMCDynmapIcon) icon).getHandle());
 	}
 
+	@Override
 	public void removeAllowedIcon(MCDynmapIcon icon) {
-		set.removeAllowedMarkerIcon(((BukkitMCDynmapIcon) icon).getConcrete());
+		_set.removeAllowedMarkerIcon(((BukkitMCDynmapIcon) icon).getHandle());
 	}
 
-	public Set<MCDynmapIcon> getIconsInUse() {
-		Set<MCDynmapIcon> icons = new HashSet<MCDynmapIcon>();
-		for (MarkerIcon icon : set.getMarkerIconsInUse()) {
-			icons.add(new BukkitMCDynmapIcon(icon));
+	@Override
+	public MCDynmapIcon[] getIconsInUse() {
+		Set<MarkerIcon> is = _set.getMarkerIconsInUse();
+		MCDynmapIcon[] icons = new MCDynmapIcon[is.size()];
+		int i = 0;
+		for (MarkerIcon icon : is) {
+			icons[i] = new BukkitMCDynmapIcon(icon);
+			i++;
 		}
 		return icons;
 	}
 
+	@Override
 	public void delete() {
-		set.deleteMarkerSet();
+		_set.deleteMarkerSet();
 	}
 
+	@Override
 	public boolean isHiddenByDefault() {
-		return set.getHideByDefault();
+		return _set.getHideByDefault();
 	}
 
+	@Override
 	public void setHiddenByDefault(boolean isHidden) {
-		set.setHideByDefault(isHidden);
+		_set.setHideByDefault(isHidden);
 	}
 
+	@Override
 	public int getLayerPriority() {
-		return set.getLayerPriority();
+		return _set.getLayerPriority();
 	}
 
+	@Override
 	public void setLayerPriority(int priority) {
-		set.setLayerPriority(priority);
+		_set.setLayerPriority(priority);
 	}
 
+	@Override
 	public int getMinZoom() {
-		return set.getMinZoom();
+		return _set.getMinZoom();
 	}
 
+	@Override
 	public void setMinZoom(int minZoom) {
-		set.setMinZoom(minZoom);
+		_set.setMinZoom(minZoom);
 	}
 
+	@Override
+	public int getMaxZoom() {
+		return _set.getMaxZoom();
+	}
+
+	@Override
+	public void setMaxZoom(int minZoom) {
+		_set.setMaxZoom(minZoom);
+	}
+
+	@Override
 	public Boolean labelIsShown() {
-		return set.getLabelShow();
+		return _set.getLabelShow();
 	}
 
+	@Override
 	public void setlabelIsShown(Boolean labelShown) {
-		set.setLabelShow(labelShown);
+		_set.setLabelShow(labelShown);
 	}
 
+	@Override
 	public MCDynmapIcon getDefaultIcon() {
-		return new BukkitMCDynmapIcon(set.getDefaultMarkerIcon());
+		return new BukkitMCDynmapIcon(_set.getDefaultMarkerIcon());
 	}
 
+	@Override
 	public void setDefaultIcon(MCDynmapIcon icon) {
-		set.setDefaultMarkerIcon(((BukkitMCDynmapIcon) icon).getConcrete());
+		_set.setDefaultMarkerIcon(((BukkitMCDynmapIcon) icon).getHandle());
 	}
 }

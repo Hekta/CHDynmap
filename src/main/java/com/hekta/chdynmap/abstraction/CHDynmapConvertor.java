@@ -8,7 +8,7 @@ import com.laytonsmith.abstraction.MCColor;
  */
 public interface CHDynmapConvertor {
 
-	public MCDynmapAPI getDynmapAPI();
+	public MCDynmapAPI getDynmap();
 
 	public MCDynmapMarkerFillStyle getFillStyle(MCColor color, double opacity);
 

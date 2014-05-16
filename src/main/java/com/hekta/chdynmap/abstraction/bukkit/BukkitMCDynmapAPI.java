@@ -1,153 +1,202 @@
 package com.hekta.chdynmap.abstraction.bukkit;
 
-import org.bukkit.plugin.Plugin;
-
-import org.dynmap.DynmapAPI;
-
+import com.hekta.chdynmap.abstraction.MCDynmapAPI;
+import com.hekta.chdynmap.abstraction.MCDynmapMarkerAPI;
+import com.laytonsmith.PureUtilities.SimpleVersion;
+import com.laytonsmith.PureUtilities.Version;
+import com.laytonsmith.abstraction.Implementation;
 import com.laytonsmith.abstraction.MCLocation;
 import com.laytonsmith.abstraction.MCOfflinePlayer;
 import com.laytonsmith.abstraction.MCPlayer;
-
-import com.hekta.chdynmap.abstraction.MCDynmapAPI;
-import com.hekta.chdynmap.abstraction.MCDynmapMarkerAPI;
 import com.laytonsmith.abstraction.MCPlugin;
-import com.laytonsmith.abstraction.bukkit.BukkitMCPlugin;
+import com.laytonsmith.annotations.abstraction;
+import org.bukkit.plugin.Plugin;
+import org.dynmap.DynmapAPI;
 
 /**
  *
  * @author Hekta
  */
+@abstraction(type = Implementation.Type.BUKKIT)
 public class BukkitMCDynmapAPI implements MCDynmapAPI {
 
-	DynmapAPI api;
+	private final DynmapAPI _api;
 
 	public BukkitMCDynmapAPI(Plugin dynmapPlugin) {
-		this.api = (DynmapAPI) dynmapPlugin;
+		this((DynmapAPI) dynmapPlugin);
 	}
 
 	public BukkitMCDynmapAPI(DynmapAPI dynmapAPI) {
-		this.api = dynmapAPI;
+		_api = dynmapAPI;
 	}
 
-	public DynmapAPI getConcrete() {
-		return api;
+	public BukkitMCDynmapAPI(Object object) {
+		this((DynmapAPI) object);
 	}
 
+	@Override
+	public DynmapAPI getHandle() {
+		return _api;
+	}
+
+	@Override
+	public Version getVersion() {
+		String s = _api.getDynmapVersion();
+		if (s != null) {
+			Version v = new SimpleVersion(_api.getDynmapVersion());
+			if ((v.getMajor() == 0) && (v.getMinor() == 0) && (v.getSupplemental() == 0)) {
+				return null;
+			} else {
+				return v;
+			}
+		} else {
+			return null;
+		}
+	}
+
+	@Override
 	public MCDynmapMarkerAPI getMarkerAPI() {
-		return new BukkitMCDynmapMarkerAPI(api.getMarkerAPI());
+		return new BukkitMCDynmapMarkerAPI(_api.getMarkerAPI());
 	}
 
+	@Override
 	public boolean markerAPIInitialized() {
-		return api.markerAPIInitialized();
+		return _api.markerAPIInitialized();
 	}
 
+	@Override
 	public boolean sendBroadcastToWeb(String sender, String message) {
-		return api.sendBroadcastToWeb(sender, message);
+		return _api.sendBroadcastToWeb(sender, message);
 	}
 
+	@Override
 	public int triggerRenderOfVolume(MCLocation minLocation, MCLocation maxLocation) {
 		if (minLocation.getWorld() == maxLocation.getWorld()) {
-			return api.triggerRenderOfVolume(minLocation.getWorld().getName(), minLocation.getBlockX(), minLocation.getBlockY(), minLocation.getBlockZ(), maxLocation.getBlockX(), maxLocation.getBlockY(), maxLocation.getBlockZ());
+			return _api.triggerRenderOfVolume(minLocation.getWorld().getName(), minLocation.getBlockX(), minLocation.getBlockY(), minLocation.getBlockZ(), maxLocation.getBlockX(), maxLocation.getBlockY(), maxLocation.getBlockZ());
 		} else {
 			throw new IllegalArgumentException("The locations must be in the same world.");
 		}
 	}
 
+	@Override
 	public int triggerRenderOfBlock(MCLocation location) {
-		return api.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
+		return _api.triggerRenderOfBlock(location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ());
 	}
 
+	@Override
 	public boolean getPauseFullRadiusRenders() {
-		return api.getPauseFullRadiusRenders();
+		return _api.getPauseFullRadiusRenders();
 	}
 
+	@Override
 	public void setPauseFullRadiusRenders(boolean paused) {
-		api.setPauseFullRadiusRenders(paused);
+		_api.setPauseFullRadiusRenders(paused);
 	}
 
+	@Override
 	public boolean getPauseUpdateRenders() {
-		return api.getPauseUpdateRenders();
+		return _api.getPauseUpdateRenders();
 	}
 
+	@Override
 	public void setPauseUpdateRenders(boolean paused) {
-		api.setPauseUpdateRenders(paused);
+		_api.setPauseUpdateRenders(paused);
 	}
 
+	@Override
 	public String getDynmapCoreVersion() {
-		return api.getDynmapCoreVersion();
+		return _api.getDynmapCoreVersion();
 	}
 
+	@Override
 	public boolean setChatToWebProcessingEnabled(boolean enabled) {
-		return api.setDisableChatToWebProcessing(!enabled);
+		return _api.setDisableChatToWebProcessing(!enabled);
 	}
 
+	@Override
 	public boolean testIfPlayerInfoProtected() {
-		return api.testIfPlayerInfoProtected();
+		return _api.testIfPlayerInfoProtected();
 	}
 
 	//players
 
+	@Override
 	public boolean getPlayerVisbility(MCOfflinePlayer player) {
-		return api.getPlayerVisbility(player.getName());
+		return _api.getPlayerVisbility(player.getName());
 	}
 
+	@Override
 	public void setPlayerVisiblity(MCOfflinePlayer player, boolean isVisible) {
-		api.setPlayerVisiblity(player.getName(), isVisible);
+		_api.setPlayerVisiblity(player.getName(), isVisible);
 	}
 
+	@Override
 	public void assertPlayerVisibility(MCOfflinePlayer player, boolean isVisible, MCPlugin plugin) {
-		api.assertPlayerVisibility(player.getName(), isVisible, ((BukkitMCPlugin) plugin).getPlugin().getName());
+		_api.assertPlayerVisibility(player.getName(), isVisible, ((Plugin) plugin.getHandle()).getName());
 	}
 
+	@Override
 	public void assertPlayerVisibility(MCOfflinePlayer player, boolean isVisible, String pluginId) {
-		api.assertPlayerVisibility(player.getName(), isVisible, pluginId);
+		_api.assertPlayerVisibility(player.getName(), isVisible, pluginId);
 	}
 
+	@Override
 	public void assertPlayerInvisibility(MCOfflinePlayer player, boolean isInvisible, MCPlugin plugin) {
-		api.assertPlayerInvisibility(player.getName(), isInvisible, ((BukkitMCPlugin) plugin).getPlugin().getName());
+		_api.assertPlayerInvisibility(player.getName(), isInvisible, ((Plugin) plugin.getHandle()).getName());
 	}
 
+	@Override
 	public void assertPlayerInvisibility(MCOfflinePlayer player, boolean isInvisible, String pluginId) {
-		api.assertPlayerInvisibility(player.getName(), isInvisible, pluginId);
+		_api.assertPlayerInvisibility(player.getName(), isInvisible, pluginId);
 	}
 
+	@Override
 	public void postPlayerMessageToWeb(MCOfflinePlayer player, String message) {
-		api.postPlayerMessageToWeb(player.getName(), player.getName(), message);
+		_api.postPlayerMessageToWeb(player.getName(), player.getName(), message);
 	}
 
+	@Override
 	public void postPlayerMessageToWeb(MCPlayer player, String message) {
-		api.postPlayerMessageToWeb(player.getName(), player.getDisplayName(), message);
+		_api.postPlayerMessageToWeb(player.getName(), player.getDisplayName(), message);
 	}
 
+	@Override
 	public void postPlayerMessageToWeb(MCOfflinePlayer player, String displayName, String message) {
-		api.postPlayerMessageToWeb(player.getName(), displayName, message);
+		_api.postPlayerMessageToWeb(player.getName(), displayName, message);
 	}
 
+	@Override
 	public void postPlayerJoinToWeb(MCOfflinePlayer player) {
-		api.postPlayerJoinQuitToWeb(player.getName(), player.getName(), true);
+		_api.postPlayerJoinQuitToWeb(player.getName(), player.getName(), true);
 	}
 
+	@Override
 	public void postPlayerJoinToWeb(MCPlayer player) {
-		api.postPlayerJoinQuitToWeb(player.getName(), player.getDisplayName(), true);
+		_api.postPlayerJoinQuitToWeb(player.getName(), player.getDisplayName(), true);
 	}
 
+	@Override
 	public void postPlayerJoinToWeb(MCOfflinePlayer player, String displayName) {
-		api.postPlayerJoinQuitToWeb(player.getName(), displayName, true);
+		_api.postPlayerJoinQuitToWeb(player.getName(), displayName, true);
 	}
 
+	@Override
 	public void postPlayerQuitToWeb(MCOfflinePlayer player) {
-		api.postPlayerJoinQuitToWeb(player.getName(), player.getName(), false);
+		_api.postPlayerJoinQuitToWeb(player.getName(), player.getName(), false);
 	}
 
+	@Override
 	public void postPlayerQuitToWeb(MCPlayer player) {
-		api.postPlayerJoinQuitToWeb(player.getName(), player.getDisplayName(), false);
+		_api.postPlayerJoinQuitToWeb(player.getName(), player.getDisplayName(), false);
 	}
 
+	@Override
 	public void postPlayerQuitToWeb(MCOfflinePlayer player, String displayName) {
-		api.postPlayerJoinQuitToWeb(player.getName(), displayName, false);
+		_api.postPlayerJoinQuitToWeb(player.getName(), displayName, false);
 	}
 
+	@Override
 	public boolean testIfPlayerVisibleToPlayer(MCOfflinePlayer player, MCOfflinePlayer playerToSee) {
-		return api.testIfPlayerVisibleToPlayer(player.getName(), playerToSee.getName());
+		return _api.testIfPlayerVisibleToPlayer(player.getName(), playerToSee.getName());
 	}
 }

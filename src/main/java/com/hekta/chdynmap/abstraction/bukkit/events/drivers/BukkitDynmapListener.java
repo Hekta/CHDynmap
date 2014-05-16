@@ -1,19 +1,13 @@
 package com.hekta.chdynmap.abstraction.bukkit.events.drivers;
 
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
-import org.bukkit.event.Listener;
-
-import org.dynmap.DynmapWebChatEvent;
-
-import com.laytonsmith.annotations.shutdown;
-import com.laytonsmith.annotations.startup;
+import com.hekta.chdynmap.abstraction.bukkit.events.BukkitMCDynmapWebChatEvent;
 import com.laytonsmith.commandhelper.CommandHelperPlugin;
 import com.laytonsmith.core.events.Driver;
 import com.laytonsmith.core.events.EventUtils;
-
-import com.hekta.chdynmap.abstraction.bukkit.events.BukkitDynmapEvents;
-import com.hekta.chdynmap.extension.CHDynmapExtension;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.dynmap.DynmapWebChatEvent;
 
 /**
  *
@@ -21,29 +15,21 @@ import com.hekta.chdynmap.extension.CHDynmapExtension;
  */
 public class BukkitDynmapListener implements Listener {
 
-	protected static BukkitDynmapListener dl;
+	private static BukkitDynmapListener _listener;
 
-	@startup
 	public static void register() {
-		if (CHDynmapExtension.dynmapAPI != null) {
-			if (dl == null) {
-				dl = new BukkitDynmapListener();
-			}
-			CommandHelperPlugin.self.registerEvent(dl);
+		if (_listener == null) {
+			_listener = new BukkitDynmapListener();
 		}
+		CommandHelperPlugin.self.registerEvent(_listener);
 	}
 
-	@shutdown
 	public static void unregister() {
-		if (CHDynmapExtension.dynmapAPI != null) {
-			DynmapWebChatEvent.getHandlerList().unregister(dl);
-		}
+			DynmapWebChatEvent.getHandlerList().unregister(_listener);
 	}
 
-	@EventHandler(priority=EventPriority.LOWEST)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onWebChat(DynmapWebChatEvent event) {
-		BukkitDynmapEvents.BukkitMCDynmapWebChatEvent wce = new BukkitDynmapEvents.BukkitMCDynmapWebChatEvent(event);
-		EventUtils.TriggerExternal(wce);
-		EventUtils.TriggerListener(Driver.EXTENSION, "dm_player_web_chat", wce);
+		EventUtils.TriggerListener(Driver.EXTENSION, "dm_player_web_chat", new BukkitMCDynmapWebChatEvent(event));
 	}
 }

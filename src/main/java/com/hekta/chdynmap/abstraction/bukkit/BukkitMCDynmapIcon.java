@@ -1,54 +1,67 @@
 package com.hekta.chdynmap.abstraction.bukkit;
 
-import com.hekta.chdynmap.abstraction.enums.bukkit.BukkitMCDynmapIconSize;
-import java.io.InputStream;
-
-import org.dynmap.markers.MarkerIcon;
-
 import com.hekta.chdynmap.abstraction.MCDynmapIcon;
 import com.hekta.chdynmap.abstraction.enums.MCDynmapIconSize;
+import com.hekta.chdynmap.abstraction.enums.bukkit.BukkitMCDynmapIconSize;
+import com.laytonsmith.abstraction.Implementation;
+import com.laytonsmith.annotations.abstraction;
+import java.io.InputStream;
+import org.dynmap.markers.MarkerIcon;
 
 /**
  *
  * @author Hekta
  */
+@abstraction(type = Implementation.Type.BUKKIT)
 public class BukkitMCDynmapIcon implements MCDynmapIcon {
 
-	MarkerIcon icon;
+	private final MarkerIcon _icon;
 
 	public BukkitMCDynmapIcon(MarkerIcon icon) {
-		this.icon = icon;
+		_icon = icon;
 	}
 
-	public MarkerIcon getConcrete() {
-		return icon;
+	public BukkitMCDynmapIcon(Object object) {
+		this((MarkerIcon) object);
 	}
 
+	@Override
+	public MarkerIcon getHandle() {
+		return _icon;
+	}
+
+	@Override
 	public String getId() {
-		return icon.getMarkerIconID();
+		return _icon.getMarkerIconID();
 	}
 
+	@Override
 	public String getLabel() {
-		return icon.getMarkerIconLabel();
+		return _icon.getMarkerIconLabel();
 	}
 
+	@Override
 	public void setLabel(String label) {
-		icon.setMarkerIconLabel(label);
+		_icon.setMarkerIconLabel(label);
 	}
 
+	@Override
 	public void setImage(InputStream image) {
-		icon.setMarkerIconImage(image);
+		_icon.setMarkerIconImage(image);
 	}
 
+	@Override
 	public void delete() {
-		icon.deleteIcon();
+		_icon.deleteIcon();
 	}
 
+	@Override
 	public boolean isBuiltIn() {
-		return icon.isBuiltIn();
+		return _icon.isBuiltIn();
 	}
 
+	@Override
 	public MCDynmapIconSize getSize() {
-		return BukkitMCDynmapIconSize.getConvertor().getAbstractedEnum(icon.getMarkerIconSize());
+		return BukkitMCDynmapIconSize.getConvertor().getAbstractedEnum(_icon.getMarkerIconSize());
 	}
 }

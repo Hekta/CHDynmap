@@ -1,73 +1,97 @@
 package com.hekta.chdynmap.abstraction.bukkit;
 
-import org.dynmap.markers.CircleMarker;
-
-import com.laytonsmith.abstraction.MCLocation;
-import com.laytonsmith.abstraction.StaticLayer;
-
 import com.hekta.chdynmap.abstraction.MCDynmapCircleMarker;
 import com.hekta.chdynmap.abstraction.MCDynmapMarkerFillStyle;
 import com.hekta.chdynmap.abstraction.MCDynmapMarkerLineStyle;
+import com.hekta.chdynmap.abstraction.enums.MCDynmapMarkerType;
+import com.laytonsmith.abstraction.Implementation;
+import com.laytonsmith.abstraction.MCLocation;
+import com.laytonsmith.abstraction.StaticLayer;
+import com.laytonsmith.annotations.abstraction;
+import org.dynmap.markers.CircleMarker;
 
 /**
  *
  * @author Hekta
  */
+@abstraction(type = Implementation.Type.BUKKIT)
 public class BukkitMCDynmapCircleMarker extends BukkitMCDynmapMarker implements MCDynmapCircleMarker {
 
-	CircleMarker cm;
+	private static final MCDynmapMarkerType TYPE = MCDynmapMarkerType.CIRCLE;
+
+	private final CircleMarker _marker;
 
 	public BukkitMCDynmapCircleMarker(CircleMarker marker) {
 		super(marker);
-		this.cm = marker;
+		_marker = marker;
+	}
+
+	public BukkitMCDynmapCircleMarker(Object object) {
+		this((CircleMarker) object);
 	}
 
 	@Override
-	public CircleMarker getConcrete() {
-		return cm;
+	public CircleMarker getHandle() {
+		return _marker;
 	}
 
+	@Override
+	public MCDynmapMarkerType getType() {
+		return TYPE;
+	}
+
+	@Override
 	public MCLocation getCenter() {
-		return StaticLayer.GetLocation(StaticLayer.GetServer().getWorld(cm.getWorld()), cm.getCenterX(), cm.getCenterY(), cm.getCenterZ());
+		return StaticLayer.GetLocation(StaticLayer.GetServer().getWorld(_marker.getWorld()), _marker.getCenterX(), _marker.getCenterY(), _marker.getCenterZ());
 	}
 
+	@Override
 	public void setCenter(MCLocation location) {
-		cm.setCenter(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
+		_marker.setCenter(location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
 	}
 
+	@Override
 	public double getRadiusX() {
-		return cm.getRadiusX();
+		return _marker.getRadiusX();
 	}
 
+	@Override
 	public double getRadiusZ() {
-		return cm.getRadiusZ();
+		return _marker.getRadiusZ();
 	}
 
+	@Override
 	public void setRadius(double radiusX, double radiusZ) {
-		cm.setRadius(radiusX, radiusZ);
+		_marker.setRadius(radiusX, radiusZ);
 	}
 
+	@Override
 	public MCDynmapMarkerLineStyle getLineStyle() {
-		return new BukkitMCDynmapMarkerLineStyle(cm.getLineColor(), cm.getLineOpacity(), cm.getLineWeight());
+		return new BukkitMCDynmapMarkerLineStyle(_marker.getLineColor(), _marker.getLineOpacity(), _marker.getLineWeight());
 	}
 
+	@Override
 	public void setLineStyle(MCDynmapMarkerLineStyle style) {
-		cm.setLineStyle(style.getWeight(), style.getOpacity(), style.getIntColor());
+		_marker.setLineStyle(style.getWeight(), style.getOpacity(), style.getIntColor());
 	}
 
+	@Override
 	public MCDynmapMarkerFillStyle getFillStyle() {
-		return new BukkitMCDynmapMarkerFillStyle(cm.getFillColor(), cm.getFillOpacity());
+		return new BukkitMCDynmapMarkerFillStyle(_marker.getFillColor(), _marker.getFillOpacity());
 	}
 
+	@Override
 	public void setFillStyle(MCDynmapMarkerFillStyle style) {
-		cm.setFillStyle(style.getOpacity(), style.getIntColor());
+		_marker.setFillStyle(style.getOpacity(), style.getIntColor());
 	}
 
+	@Override
 	public boolean isBoosted() {
-		return cm.getBoostFlag();
+		return _marker.getBoostFlag();
 	}
 
+	@Override
 	public void setBoosted(boolean isBoosted) {
-		cm.setBoostFlag(isBoosted);
+		_marker.setBoostFlag(isBoosted);
 	}
 }

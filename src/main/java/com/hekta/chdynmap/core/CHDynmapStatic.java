@@ -1,11 +1,6 @@
 package com.hekta.chdynmap.core;
 
-import java.util.regex.Pattern;
-
-import com.laytonsmith.core.constructs.Target;
-import com.laytonsmith.core.exceptions.ConfigRuntimeException;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
-
+import com.hekta.chdynmap.CHDynmap;
 import com.hekta.chdynmap.abstraction.MCDynmapAPI;
 import com.hekta.chdynmap.abstraction.MCDynmapAreaMarker;
 import com.hekta.chdynmap.abstraction.MCDynmapCircleMarker;
@@ -16,6 +11,10 @@ import com.hekta.chdynmap.abstraction.MCDynmapMarkerAPI;
 import com.hekta.chdynmap.abstraction.MCDynmapMarkerSet;
 import com.hekta.chdynmap.abstraction.MCDynmapPlayerSet;
 import com.hekta.chdynmap.abstraction.MCDynmapPolyLineMarker;
+import com.laytonsmith.core.constructs.Target;
+import com.laytonsmith.core.exceptions.ConfigRuntimeException;
+import com.laytonsmith.core.functions.Exceptions.ExceptionType;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -24,7 +23,7 @@ import com.hekta.chdynmap.abstraction.MCDynmapPolyLineMarker;
 public final class CHDynmapStatic {
 
 	public static MCDynmapAPI getDynmapAPI(Target t) {
-		MCDynmapAPI api = com.hekta.chdynmap.extension.CHDynmapExtension.dynmapAPI;
+		MCDynmapAPI api = CHDynmap.getDynmapAPI();
 		if (api != null) {
 			return api;
 		} else {

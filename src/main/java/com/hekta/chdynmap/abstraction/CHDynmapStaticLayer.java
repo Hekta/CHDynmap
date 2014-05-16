@@ -1,10 +1,9 @@
 package com.hekta.chdynmap.abstraction;
 
+import com.hekta.chdynmap.annotations.CHDynmapConvert;
 import com.laytonsmith.abstraction.Implementation;
 import com.laytonsmith.abstraction.MCColor;
 import com.laytonsmith.PureUtilities.ClassLoading.ClassDiscovery;
-
-import com.hekta.chdynmap.annotations.CHDynmapConvert;
 
 /**
  *
@@ -31,7 +30,7 @@ public final class CHDynmapStaticLayer {
 						} else {
 							System.err.println("[CommandHelper] [CHDynmap] More than one CHDynmapConvertor for this server type was detected!");
 						}
-					} catch (Exception exception) {
+					} catch (IllegalAccessException | InstantiationException exception) {
 						System.err.println("[CommandHelper] [CHDynmap] Tried to instantiate the CHDynmapConvertor, but couldn't: " + exception.getMessage());
 					}
 				}
@@ -41,8 +40,8 @@ public final class CHDynmapStaticLayer {
 		}
 	}
 
-	public static MCDynmapAPI getDynmapAPI() {
-		return convertor.getDynmapAPI();
+	public static MCDynmapAPI getDynmap() {
+		return convertor.getDynmap();
 	}
 
 	public static MCDynmapMarkerFillStyle getFillStyle(MCColor color, double opacity) {

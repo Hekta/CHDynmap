@@ -1,13 +1,14 @@
 package com.hekta.chdynmap.abstraction;
 
 import com.hekta.chdynmap.abstraction.enums.MCDynmapIconSize;
+import com.laytonsmith.abstraction.AbstractionObject;
 import java.io.InputStream;
 
 /**
  *
  * @author Hekta
  */
-public interface MCDynmapIcon {
+public interface MCDynmapIcon extends AbstractionObject {
 
 	public String getId();
 

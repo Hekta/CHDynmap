@@ -5,7 +5,7 @@ CHDynmap
 
 - To install the extension, put the [jar file](http://ci.nixium.com/job/CHDynMap/) in the extensions folder of the CommandHelper folder.
  
-- The last version is compatible with Dynmap 1.9, CommandHelper 3.3.1-2689 and craftbukkit 1.7.9-R0.1.
+- The last version is compatible with Dynmap 1.9.4, CommandHelper 3.3.1-2705 and craftbukkit 1.7.9-R0.1.
 
 - The documentation for the extension is [here](https://github.com/Hekta/CHDynmap/blob/master/documentation/Documentation.md).
 

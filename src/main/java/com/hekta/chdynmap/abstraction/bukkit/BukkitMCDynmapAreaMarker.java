@@ -1,74 +1,107 @@
 package com.hekta.chdynmap.abstraction.bukkit;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.dynmap.markers.AreaMarker;
-
-import com.laytonsmith.abstraction.MCLocation;
-import com.laytonsmith.abstraction.MCWorld;
-import com.laytonsmith.abstraction.StaticLayer;
-
 import com.hekta.chdynmap.abstraction.MCDynmapAreaMarker;
 import com.hekta.chdynmap.abstraction.MCDynmapMarkerFillStyle;
 import com.hekta.chdynmap.abstraction.MCDynmapMarkerLineStyle;
+import com.hekta.chdynmap.abstraction.enums.MCDynmapMarkerType;
+import com.laytonsmith.abstraction.Implementation;
+import com.laytonsmith.abstraction.MCLocation;
+import com.laytonsmith.abstraction.MCWorld;
+import com.laytonsmith.abstraction.StaticLayer;
+import com.laytonsmith.annotations.abstraction;
+import java.util.List;
+import org.dynmap.markers.AreaMarker;
 
 /**
  *
  * @author Hekta
  */
+@abstraction(type = Implementation.Type.BUKKIT)
 public class BukkitMCDynmapAreaMarker extends BukkitMCDynmapMarker implements MCDynmapAreaMarker {
 
-	AreaMarker am;
+	private static final MCDynmapMarkerType TYPE = MCDynmapMarkerType.AREA;
+
+	private final AreaMarker _marker;
 
 	public BukkitMCDynmapAreaMarker(AreaMarker marker) {
 		super(marker);
-		this.am = marker;
+		_marker = marker;
+	}
+
+	public BukkitMCDynmapAreaMarker(Object object) {
+		this((AreaMarker) object);
 	}
 
 	@Override
-	public AreaMarker getConcrete() {
-		return am;
+	public AreaMarker getHandle() {
+		return _marker;
 	}
 
+	@Override
+	public MCDynmapMarkerType getType() {
+		return TYPE;
+	}
+
+	@Override
 	public double getTopY() {
-		return am.getTopY();
+		return _marker.getTopY();
 	}
 
+	@Override
 	public double getBottomY() {
-		return am.getBottomY();
+		return _marker.getBottomY();
 	}
 
+	@Override
 	public void setRangeY(double yTop, double yBottom) {
-		am.setRangeY(yTop, yBottom);
+		_marker.setRangeY(yTop, yBottom);
 	}
 
+	@Override
 	public void setRangeY(MCLocation top, MCLocation bottom) {
-		am.setRangeY(top.getY(), bottom.getY());
+		_marker.setRangeY(top.getY(), bottom.getY());
 	}
 
+	@Override
 	public int getCornerCount() {
-		return am.getCornerCount();
+		return _marker.getCornerCount();
 	}
 
+	@Override
 	public MCLocation getCorner(int n) {
-		return StaticLayer.GetLocation(StaticLayer.GetServer().getWorld(am.getWorld()), am.getCornerX(n), 0, am.getCornerZ(n));
+		return StaticLayer.GetLocation(StaticLayer.GetServer().getWorld(_marker.getWorld()), _marker.getCornerX(n), 0, _marker.getCornerZ(n));
 	}
 
-	public List<MCLocation> getCorners() {
-		int count = am.getCornerCount();
-		List<MCLocation> corners = new ArrayList<MCLocation>();
-		MCWorld world = StaticLayer.GetServer().getWorld(m.getWorld());
+	@Override
+	public MCLocation[] getCorners() {
+		int count = _marker.getCornerCount();
+		MCLocation[] corners = new MCLocation[count];
+		MCWorld world = StaticLayer.GetServer().getWorld(_marker.getWorld());
 		for (int i = 0 ; i < count ; i++) {
-			corners.add(StaticLayer.GetLocation(world, am.getCornerX(i), 0, am.getCornerZ(i)));
+			corners[i] = StaticLayer.GetLocation(world, _marker.getCornerX(i), 0, _marker.getCornerZ(i));
 		}
 		return corners;
 	}
 
+	@Override
 	public void setCorner(int n, MCLocation location) {
-		am.setCornerLocation(n, location.getX(), location.getZ());
+		_marker.setCornerLocation(n, location.getX(), location.getZ());
 	}
 
+	@Override
+	public void setCorners(MCLocation[] locations) {
+		double[] Xs = new double[locations.length];
+		double[] Zs = new double[locations.length];
+		int i = 0;
+		for (MCLocation location : locations) {
+			Xs[i] = location.getX();
+			Zs[i] = location.getZ();
+			i++;
+		}
+		_marker.setCornerLocations(Xs, Zs);
+	}
+
+	@Override
 	public void setCorners(List<MCLocation> locations) {
 		int size = locations.size();
 		double[] Xs = new double[size];
@@ -79,34 +112,41 @@ public class BukkitMCDynmapAreaMarker extends BukkitMCDynmapMarker implements MC
 			Zs[i] = location.getZ();
 			i++;
 		}
-		am.setCornerLocations(Xs, Zs);
+		_marker.setCornerLocations(Xs, Zs);
 	}
 
+	@Override
 	public void deleteCorner(int n) {
-		am.deleteCorner(n);
+		_marker.deleteCorner(n);
 	}
 
+	@Override
 	public MCDynmapMarkerLineStyle getLineStyle() {
-		return new BukkitMCDynmapMarkerLineStyle(am.getLineColor(), am.getLineOpacity(), am.getLineWeight());
+		return new BukkitMCDynmapMarkerLineStyle(_marker.getLineColor(), _marker.getLineOpacity(), _marker.getLineWeight());
 	}
 
+	@Override
 	public void setLineStyle(MCDynmapMarkerLineStyle style) {
-		am.setLineStyle(style.getWeight(), style.getOpacity(), style.getIntColor());
+		_marker.setLineStyle(style.getWeight(), style.getOpacity(), style.getIntColor());
 	}
 
+	@Override
 	public MCDynmapMarkerFillStyle getFillStyle() {
-		return new BukkitMCDynmapMarkerFillStyle(am.getFillColor(), am.getFillOpacity());
+		return new BukkitMCDynmapMarkerFillStyle(_marker.getFillColor(), _marker.getFillOpacity());
 	}
 
+	@Override
 	public void setFillStyle(MCDynmapMarkerFillStyle style) {
-		am.setFillStyle(style.getOpacity(), style.getIntColor());
+		_marker.setFillStyle(style.getOpacity(), style.getIntColor());
 	}
 
+	@Override
 	public boolean isBoosted() {
-		return am.getBoostFlag();
+		return _marker.getBoostFlag();
 	}
 
+	@Override
 	public void setBoosted(boolean isBoosted) {
-		am.setBoostFlag(isBoosted);
+		_marker.setBoostFlag(isBoosted);
 	}
 }

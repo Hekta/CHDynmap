@@ -1,12 +1,10 @@
 package com.hekta.chdynmap.abstraction.enums.bukkit;
 
-import org.dynmap.markers.MarkerIcon.MarkerSize;
-
+import com.hekta.chdynmap.abstraction.enums.MCDynmapIconSize;
 import com.laytonsmith.abstraction.Implementation;
 import com.laytonsmith.abstraction.enums.EnumConvertor;
 import com.laytonsmith.annotations.abstractionenum;
-
-import com.hekta.chdynmap.abstraction.enums.MCDynmapIconSize;
+import org.dynmap.markers.MarkerIcon.MarkerSize;
 
 /**
  *
@@ -19,9 +17,9 @@ import com.hekta.chdynmap.abstraction.enums.MCDynmapIconSize;
 		)
 public class BukkitMCDynmapIconSize extends EnumConvertor<MCDynmapIconSize, MarkerSize> {
 
-	private static com.hekta.chdynmap.abstraction.enums.bukkit.BukkitMCDynmapIconSize instance;
+	private static BukkitMCDynmapIconSize instance;
 
-	public static com.hekta.chdynmap.abstraction.enums.bukkit.BukkitMCDynmapIconSize getConvertor() {
+	public static BukkitMCDynmapIconSize getConvertor() {
 		if (instance == null) {
 			instance = new com.hekta.chdynmap.abstraction.enums.bukkit.BukkitMCDynmapIconSize();
 		}

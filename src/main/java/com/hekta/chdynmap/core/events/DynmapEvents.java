@@ -1,13 +1,13 @@
 package com.hekta.chdynmap.core.events;
 
-import java.util.Map;
-
+import com.hekta.chdynmap.abstraction.events.MCDynmapWebChatEvent;
+import com.laytonsmith.PureUtilities.Version;
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.core.CHVersion;
 import com.laytonsmith.core.constructs.CArray;
 import com.laytonsmith.core.constructs.CBoolean;
-import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.CString;
+import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.events.AbstractEvent;
 import com.laytonsmith.core.events.BindableEvent;
@@ -18,9 +18,7 @@ import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.exceptions.EventException;
 import com.laytonsmith.core.exceptions.PrefilterNonMatchException;
 import com.laytonsmith.core.functions.Exceptions.ExceptionType;
-import com.laytonsmith.PureUtilities.Version;
-
-import com.hekta.chdynmap.abstraction.events.MCDynmapWebChatEvent;
+import java.util.Map;
 
 /**
  *
@@ -35,16 +33,19 @@ public class DynmapEvents {
 	@api
 	public static class dm_player_web_chat extends AbstractEvent {
 
+		@Override
 		public String getName() {
 			return "dm_player_web_chat";
 		}
 
+		@Override
 		public Driver driver() {
 			return Driver.EXTENSION;
 		}
 
-		public BindableEvent convert(CArray manualObject) {
-			throw new ConfigRuntimeException("This operation is not supported.", ExceptionType.BindException, Target.UNKNOWN);
+		@Override
+		public BindableEvent convert(CArray manualObject, Target t) {
+			throw new ConfigRuntimeException("This operation is not supported.", ExceptionType.BindException, t);
 /*			//TODO
 *			String source = manualObject.get("source").val();
 *			String message = manualObject.get("message").val();
@@ -54,10 +55,12 @@ public class DynmapEvents {
 *			//new DynmapWebChatEvent(source, name, message);
 */		}
 
+		@Override
 		public boolean modifyEvent(String key, Construct value, BindableEvent event) {
 			return false;
 		}
 
+		@Override
 		public String docs() {
 			return "{name: <macro> | processed: <boolean match> | source: <macro>}"
 					+ " Fires when a player send a message on the Dynmap."
@@ -66,32 +69,34 @@ public class DynmapEvents {
 					+ " {}";
 		}
 
+		@Override
 		public Version since() {
 			return CHVersion.V3_3_1;
 		}
 
+		@Override
 		public boolean matches(Map<String, Construct> prefilter, BindableEvent event) throws PrefilterNonMatchException {
 			if (event instanceof MCDynmapWebChatEvent) {
 				MCDynmapWebChatEvent wce = (MCDynmapWebChatEvent) event;
 				Prefilters.match(prefilter, "source", wce.getSource(), PrefilterType.MACRO);
 				Prefilters.match(prefilter, "name", wce.getName(), PrefilterType.MACRO);
-				Prefilters.match(prefilter, "processed", String.valueOf(wce.isProcessed()), PrefilterType.MACRO);
+				Prefilters.match(prefilter, "processed", wce.isProcessed(), PrefilterType.BOOLEAN_MATCH);
 				return true;
 			} else {
 				return false;
 			}
 		}
 
+		@Override
 		public Map<String, Construct> evaluate(BindableEvent event) throws EventException {
 			if (event instanceof MCDynmapWebChatEvent) {
-				Map<String, Construct> eventObject = evaluate_helper(event);
+				Map<String, Construct> eventMap = evaluate_helper(event);
 				MCDynmapWebChatEvent wce = (MCDynmapWebChatEvent) event;
-				Target t = Target.UNKNOWN;
-				eventObject.put("source", new CString(wce.getSource(), t));
-				eventObject.put("name", new CString(wce.getName(), t));
-				eventObject.put("message", new CString(wce.getMessage(), t));
-				eventObject.put("processed", new CBoolean(wce.isProcessed(), t));
-				return eventObject;
+				eventMap.put("source", new CString(wce.getSource(), Target.UNKNOWN));
+				eventMap.put("name", new CString(wce.getName(), Target.UNKNOWN));
+				eventMap.put("message", new CString(wce.getMessage(), Target.UNKNOWN));
+				eventMap.put("processed", new CBoolean(wce.isProcessed(), Target.UNKNOWN));
+				return eventMap;
 			} else {
 				throw new EventException("Cannot convert to CHDynmapWebChatEvent.");
 			}

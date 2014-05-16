@@ -1,5 +1,7 @@
 package com.hekta.chdynmap.abstraction;
 
+import com.laytonsmith.PureUtilities.Version;
+import com.laytonsmith.abstraction.AbstractionObject;
 import com.laytonsmith.abstraction.MCLocation;
 import com.laytonsmith.abstraction.MCOfflinePlayer;
 import com.laytonsmith.abstraction.MCPlayer;
@@ -9,7 +11,9 @@ import com.laytonsmith.abstraction.MCPlugin;
  *
  * @author Hekta
  */
-public interface MCDynmapAPI {
+public interface MCDynmapAPI extends AbstractionObject {
+
+	public Version getVersion();
 
 	public MCDynmapMarkerAPI getMarkerAPI();
 	public boolean markerAPIInitialized();

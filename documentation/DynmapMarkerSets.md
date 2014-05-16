@@ -11,6 +11,9 @@ Creates a markerset and returns its ID. The ID must be unique among markersets a
 - label - setID - the markerset label
 - persistent - false - sets if the markerset is persistent and can contain persistent markers - can not be changed later
 
+### string dm\_default\_markerset\_id():
+Returns the ID of the default markerset.
+
 ### void dm\_delete\_markerset(setID):
 Deletes a marker set.
 
@@ -32,8 +35,11 @@ Returns the markerset label.
 ### integer dm\_markerset\_layer\_priority(setID):
 Returns the markerset layer ordering priority (0=default, low before high in layer order).
 
+### integer dm\_markerset\_max\_zoom(setID):
+Returns the maximum zoom level of the markerset (the markers in the set will be hidden when the zoom level is above this setting). -1 means no maximum. This setting may be ignored on certain markers with the dm\_set\_marker\_max\_zoom() function.
+
 ### integer dm\_markerset\_min\_zoom(setID):
-Returns the min zoom-in for display of layer (hide when zoom is below this setting, 0 = top, default).
+Returns the minimum zoom level of the markerset (the markers in the set will be hidden when the zoom level is below this setting). -1 means no minimum. This setting may be ignored on certain markers with the dm\_set\_marker\_min\_zoom() function.
 
 ### boolean dm\_markerset\_persistent(setID):
 Returns if the markerset is persistent and can contain persistent markers.
@@ -56,8 +62,11 @@ Sets the label of the markerset.
 ### void dm\_set\_markerset\_layer\_priority(setID, integer):
 Sets the layer priority of the markerset (0=default, low before high in layer order).
 
+### void dm\_set\_markerset\_max\_zoom(setID, integer):
+Sets the maximum zoom level of the markerset (the markers in the set will be hidden when the zoom level is above this setting). -1 means no maximum. This setting may be ignored on certain markers with the dm\_set\_marker\_max\_zoom() function.
+
 ### void dm\_set\_markerset\_min\_zoom(setID, integer):
-Sets the min zoom of the markerset (0 = top, default).
+Sets the minimum zoom level of the markerset (the markers in the set will be hidden when the zoom level is below this setting). -1 means no minimum. This setting may be ignored on certain markers with the dm\_set\_marker\_min\_zoom() function.
 
 ### void dm\_set\_markerset\_show\_labels(setID, mixed):
 Sets if labels are shown (if false, hide, show on hover, if null, use global default).
