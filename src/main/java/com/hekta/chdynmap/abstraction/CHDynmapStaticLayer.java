@@ -20,7 +20,7 @@ public final class CHDynmapStaticLayer {
 	}
 
 	private static void InitConvertor() {
-		for(Class c : ClassDiscovery.getDefaultInstance().loadClassesWithAnnotation(CHDynmapConvert.class)) {
+		for(Class<?> c : ClassDiscovery.getDefaultInstance().loadClassesWithAnnotation(CHDynmapConvert.class)) {
 			if (CHDynmapConvertor.class.isAssignableFrom(c)) {
 				CHDynmapConvert convert = (CHDynmapConvert) c.getAnnotation(CHDynmapConvert.class);
 				if (convert.type() == Implementation.GetServerType()) {
