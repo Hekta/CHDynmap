@@ -210,7 +210,7 @@ public class DynmapIcons {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getIcon(args[0].val(), t).isBuiltIn(), t);
+			return CBoolean.get(CHDynmapStatic.getIcon(args[0].val(), t).isBuiltIn());
 		}
 	}
 

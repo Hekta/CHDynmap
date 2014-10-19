@@ -316,7 +316,7 @@ public class DynmapPlayerSets {
 			} else {
 				player = Static.getServer().getOfflinePlayer(args[1].val());
 			}
-			return new CBoolean(CHDynmapStatic.getPlayerSet(args[0].val(), t).isPlayerInSet(player), t);
+			return CBoolean.get(CHDynmapStatic.getPlayerSet(args[0].val(), t).isPlayerInSet(player));
 		}
 	}
 
@@ -391,7 +391,7 @@ public class DynmapPlayerSets {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getPlayerSet(args[0].val(), t).isPersistent(), t);
+			return CBoolean.get(CHDynmapStatic.getPlayerSet(args[0].val(), t).isPersistent());
 		}
 	}
 
@@ -410,7 +410,7 @@ public class DynmapPlayerSets {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getPlayerSet(args[0].val(), t).isSymmetric(), t);
+			return CBoolean.get(CHDynmapStatic.getPlayerSet(args[0].val(), t).isSymmetric());
 		}
 	}
 

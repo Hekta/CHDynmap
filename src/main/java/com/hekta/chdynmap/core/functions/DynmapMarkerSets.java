@@ -395,7 +395,7 @@ public class DynmapMarkerSets {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getMarkerSet(args[0].val(), t).isHiddenByDefault(), t);
+			return CBoolean.get(CHDynmapStatic.getMarkerSet(args[0].val(), t).isHiddenByDefault());
 		}
 	}
 
@@ -617,7 +617,7 @@ public class DynmapMarkerSets {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getMarkerSet(args[0].val(), t).isPersistent(), t);
+			return CBoolean.get(CHDynmapStatic.getMarkerSet(args[0].val(), t).isPersistent());
 		}
 	}
 
@@ -640,7 +640,7 @@ public class DynmapMarkerSets {
 			if (set.labelIsShown() == null) {
 				return CNull.NULL;
 			} else {
-				return new CBoolean(set.labelIsShown(), t);
+				return CBoolean.get(set.labelIsShown());
 			}
 		}
 	}

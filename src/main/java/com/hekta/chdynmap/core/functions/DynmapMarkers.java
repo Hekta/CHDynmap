@@ -410,9 +410,9 @@ public class DynmapMarkers {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			switch (marker.getType()) {
 				case AREA:
-					return new CBoolean(((MCDynmapAreaMarker) marker).isBoosted(), t);
+					return CBoolean.get(((MCDynmapAreaMarker) marker).isBoosted());
 				case CIRCLE:
-					return new CBoolean(((MCDynmapCircleMarker) marker).isBoosted(), t);
+					return CBoolean.get(((MCDynmapCircleMarker) marker).isBoosted());
 				default:
 					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
 			}
@@ -785,7 +785,7 @@ public class DynmapMarkers {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).isLabelMarkup(), t);
+			return CBoolean.get(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).isLabelMarkup());
 		}
 	}
 
@@ -1025,7 +1025,7 @@ public class DynmapMarkers {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).isPersistent(), t);
+			return CBoolean.get(CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t).isPersistent());
 		}
 	}
 

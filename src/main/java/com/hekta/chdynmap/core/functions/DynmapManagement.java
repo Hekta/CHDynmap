@@ -121,7 +121,7 @@ public class DynmapManagement {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).getPauseFullRadiusRenders(), t);
+			return CBoolean.get(CHDynmapStatic.getDynmapAPI(t).getPauseFullRadiusRenders());
 		}
 	}
 
@@ -210,7 +210,7 @@ public class DynmapManagement {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).getPauseUpdateRenders(), t);
+			return CBoolean.get(CHDynmapStatic.getDynmapAPI(t).getPauseUpdateRenders());
 		}
 	}
 
@@ -453,7 +453,7 @@ public class DynmapManagement {
 
 		@Override
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).markerAPIInitialized(), t);
+			return CBoolean.get(CHDynmapStatic.getDynmapAPI(t).markerAPIInitialized());
 		}
 	}
 }

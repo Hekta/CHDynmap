@@ -95,7 +95,7 @@ public class DynmapEvents {
 				eventMap.put("source", new CString(wce.getSource(), Target.UNKNOWN));
 				eventMap.put("name", new CString(wce.getName(), Target.UNKNOWN));
 				eventMap.put("message", new CString(wce.getMessage(), Target.UNKNOWN));
-				eventMap.put("processed", new CBoolean(wce.isProcessed(), Target.UNKNOWN));
+				eventMap.put("processed", CBoolean.get(wce.isProcessed()));
 				return eventMap;
 			} else {
 				throw new EventException("Cannot convert to CHDynmapWebChatEvent.");

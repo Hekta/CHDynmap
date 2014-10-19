@@ -86,7 +86,7 @@ public class DynmapPlayers {
 			} else {
 				player = Static.getServer().getOfflinePlayer(args[0].val());
 			}
-			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).getPlayerVisbility(player), t);
+			return CBoolean.get(CHDynmapStatic.getDynmapAPI(t).getPlayerVisbility(player));
 		}
 	}
 
@@ -271,7 +271,7 @@ public class DynmapPlayers {
 				player = Static.getServer().getOfflinePlayer(args[0].val());
 				otherPlayer = Static.getServer().getOfflinePlayer(args[1].val());
 			}
-			return new CBoolean(CHDynmapStatic.getDynmapAPI(t).testIfPlayerVisibleToPlayer(player, otherPlayer), t);
+			return CBoolean.get(CHDynmapStatic.getDynmapAPI(t).testIfPlayerVisibleToPlayer(player, otherPlayer));
 		}
 	}
 
