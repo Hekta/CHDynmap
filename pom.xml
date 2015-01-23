@@ -5,10 +5,6 @@
 	<groupId>com.hekta</groupId>
 	<artifactId>CHDynmap</artifactId>
 	<version>1.1.0</version>
-	<packaging>jar</packaging>
-
-	<name>CHDynmap</name>
-	<url>http://maven.apache.org</url>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,28 +12,16 @@
 
 	<repositories>
 		<repository>
-			<releases>
-			</releases>
-			<snapshots>
-			</snapshots>
-			<id>bukkit-repo</id>
-			<url>http://repo.bukkit.org/content/groups/public</url>
-		</repository>
-		<repository>
-			<releases>
-			</releases>
-			<snapshots>
-			</snapshots>
-			<id>sk89q-mvn2</id>
-			<url>http://mvn2.sk89q.com/repo</url>
-		</repository>
-		<repository>
-			<releases>
-			</releases>
-			<snapshots>
-			</snapshots>
 			<id>dynmap-repo</id>
 			<url>http://repo.mikeprimm.com/</url>
+		</repository>
+		<repository>
+			<id>spigot-repo</id>
+			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+		</repository>
+		<repository>
+			<id>sk89q-mvn2</id>
+			<url>http://mvn2.sk89q.com/repo</url>
 		</repository>
 	</repositories>
 
@@ -45,7 +29,7 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.7.10-R0.1-SNAPSHOT</version>
+			<version>1.8-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
@@ -53,9 +37,9 @@
 			<version>3.3.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>org.dynmap</groupId>
+			<groupId>us.dynmap</groupId>
 			<artifactId>dynmap-api</artifactId>
-			<version>1.9.4</version>
+			<version>2.1</version>
 		</dependency>
 	</dependencies>
 
