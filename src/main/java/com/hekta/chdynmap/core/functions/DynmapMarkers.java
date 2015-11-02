@@ -671,7 +671,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			CArray styleArray = ArgumentValidation.getArray(args[2], t);
-			Set keys = styleArray.keySet();
+			Set keys = styleArray.stringKeySet();
 			MCDynmapMarkerFillStyle fillStyle;
 			switch (marker.getType()) {
 				case AREA:
@@ -877,7 +877,7 @@ public class DynmapMarkers {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			CArray styleArray = ArgumentValidation.getArray(args[2], t);
-			Set keys = styleArray.keySet();
+			Set keys = styleArray.stringKeySet();
 			MCDynmapMarkerLineStyle lineStyle;
 			switch (marker.getType()) {
 				case AREA:
