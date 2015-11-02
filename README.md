@@ -5,7 +5,7 @@ CHDynmap
 
 - To install the extension, put the [jar file](http://ci.nixium.com/job/CHDynMap/) in the extensions folder of the CommandHelper folder.
  
-- The last version is compatible with at least Dynmap 2.1 - 2.2, CommandHelper builds 2861+, and Bukkit/Spigot 1.8.
+- The last version should be compatible with at least Dynmap 1.9.4 - 2.2, CommandHelper builds 2861+, and Bukkit/Spigot 1.7.2 - 1.8.8.
 
 - The documentation for the extension is [here](https://github.com/Hekta/CHDynmap/blob/master/documentation/Documentation.md).
 
