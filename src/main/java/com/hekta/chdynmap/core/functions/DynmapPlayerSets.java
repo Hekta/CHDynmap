@@ -17,9 +17,15 @@ import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.CommandHelperEnvironment;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CRECastException;
+import com.laytonsmith.core.exceptions.CRE.CREFormatException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
+import com.laytonsmith.core.exceptions.CRE.CREPlayerOfflineException;
+import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
+import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import java.util.Set;
 
 /**
@@ -58,8 +64,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 	}
 
@@ -71,8 +77,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CRECastException.class};
 		}
 	}
 
@@ -90,8 +96,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -103,7 +109,7 @@ public class DynmapPlayerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray setArray = new CArray(t);
 			for (MCDynmapPlayerSet set : CHDynmapStatic.getMarkerAPI(t).getPlayerSets()) {
-				setArray.push(new CString(set.getId(), t));
+				setArray.push(new CString(set.getId(), t), t);
 			}
 			return setArray;
 		}
@@ -123,8 +129,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override
@@ -145,7 +151,7 @@ public class DynmapPlayerSets {
 			CHDynmapStatic.testDynmapIDValidity(setID, t);
 			//already exists ?
 			if (CHDynmapStatic.getMarkerAPI(t).getPlayerSet(setID) != null) {
-				throw new ConfigRuntimeException("\"" + setID + "\" is already an existing playerset.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("\"" + setID + "\" is already an existing playerset.", t);
 			}
 			//create the option array
 			CArray optionArray;
@@ -162,7 +168,7 @@ public class DynmapPlayerSets {
 				CArray givenPlayers = ArgumentValidation.getArray(optionArray.get("players", t), t);
 				players = new MCOfflinePlayer[(int) givenPlayers.size()];
 				if (givenPlayers.inAssociativeMode()) {
-					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
+					throw new CRECastException("The array must not be associative.", t);
 				}
 				int i = 0;
 				for (Construct player : givenPlayers.asList()) {
@@ -189,7 +195,7 @@ public class DynmapPlayerSets {
 			//create player set
 			MCDynmapPlayerSet set = CHDynmapStatic.getMarkerAPI(t).createPlayerSet(setID, symmetric, players, persistent);
 			if (set == null) {
-				throw new ConfigRuntimeException("The markerset creation failed.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The markerset creation failed.", t);
 			}
 			return new CString(set.getId(), t);
 		}
@@ -209,8 +215,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -242,7 +248,7 @@ public class DynmapPlayerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray playerArray = new CArray(t);
 			for (MCOfflinePlayer player : CHDynmapStatic.getPlayerSet(args[0].val(), t).getPlayers()) {
-				playerArray.push(new CString(player.getName(), t));
+				playerArray.push(new CString(player.getName(), t), t);
 			}
 			return playerArray;
 		}
@@ -266,7 +272,7 @@ public class DynmapPlayerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray givenPlayers = ArgumentValidation.getArray(args[1], t);
 			if (givenPlayers.inAssociativeMode()) {
-				throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
+				throw new CRECastException("The array must not be associative.", t);
 			}
 			MCOfflinePlayer[] players = new MCOfflinePlayer[(int) givenPlayers.size()];
 			int i = 0;
@@ -293,8 +299,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CREPlayerOfflineException.class};
 		}
 
 		@Override
@@ -309,7 +315,7 @@ public class DynmapPlayerSets {
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 				}
@@ -334,8 +340,8 @@ public class DynmapPlayerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CREPlayerOfflineException.class};
 		}
 
 		@Override
@@ -352,7 +358,7 @@ public class DynmapPlayerSets {
 			if (args.length == 2) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					isInSet = ArgumentValidation.getBoolean(args[1], t);
@@ -363,12 +369,12 @@ public class DynmapPlayerSets {
 			}
 			if (isInSet) {
 				if (set.isPlayerInSet(player)) {
-					throw new ConfigRuntimeException("The player is already in the playerset.", ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("The player is already in the playerset.", t);
 				}
 				set.addPlayer(player);	
 			} else {
 				if (!set.isPlayerInSet(player)) {
-					throw new ConfigRuntimeException("The player is already not in the playerset.", ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("The player is already not in the playerset.", t);
 				}
 				set.removePlayer(player);
 			}

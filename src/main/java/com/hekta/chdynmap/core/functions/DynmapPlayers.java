@@ -14,9 +14,11 @@ import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.CommandHelperEnvironment;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CREPlayerOfflineException;
+import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 
 /**
  *
@@ -54,8 +56,8 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPlayerOfflineException.class};
 		}
 	}
 
@@ -79,7 +81,7 @@ public class DynmapPlayers {
 			if (args.length == 0) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 				}
@@ -104,8 +106,8 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPlayerOfflineException.class};
 		}
 
 		@Override
@@ -121,7 +123,7 @@ public class DynmapPlayers {
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					isVisible = ArgumentValidation.getBoolean(args[0], t);
@@ -149,8 +151,8 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPlayerOfflineException.class};
 		}
 
 		@Override
@@ -168,7 +170,7 @@ public class DynmapPlayers {
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					isVisible = ArgumentValidation.getBoolean(args[0], t);
@@ -202,8 +204,8 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPlayerOfflineException.class};
 		}
 
 		@Override
@@ -221,7 +223,7 @@ public class DynmapPlayers {
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					isInvisible = ArgumentValidation.getBoolean(args[0], t);
@@ -262,7 +264,7 @@ public class DynmapPlayers {
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					otherPlayer = Static.getServer().getOfflinePlayer(args[0].val());
@@ -289,8 +291,8 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PlayerOfflineException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPlayerOfflineException.class};
 		}
 
 		@Override
@@ -307,7 +309,7 @@ public class DynmapPlayers {
 			if (args.length == 1) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					displayName = psender.getDisplayName();
@@ -354,7 +356,7 @@ public class DynmapPlayers {
 			if (args.length == 0) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					displayName = psender.getDisplayName();
@@ -395,7 +397,7 @@ public class DynmapPlayers {
 			if (args.length == 0) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
 				if (psender == null) {
-					throw new ConfigRuntimeException("No player was specified!", ExceptionType.PlayerOfflineException, t);
+					throw new CREPlayerOfflineException("No player was specified!", t);
 				} else {
 					player = psender;
 					displayName = psender.getDisplayName();

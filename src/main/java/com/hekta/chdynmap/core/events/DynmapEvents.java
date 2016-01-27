@@ -14,10 +14,9 @@ import com.laytonsmith.core.events.BindableEvent;
 import com.laytonsmith.core.events.Driver;
 import com.laytonsmith.core.events.Prefilters;
 import com.laytonsmith.core.events.Prefilters.PrefilterType;
-import com.laytonsmith.core.exceptions.ConfigRuntimeException;
+import com.laytonsmith.core.exceptions.CRE.CREBindException;
 import com.laytonsmith.core.exceptions.EventException;
 import com.laytonsmith.core.exceptions.PrefilterNonMatchException;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import java.util.Map;
 
 /**
@@ -45,7 +44,7 @@ public class DynmapEvents {
 
 		@Override
 		public BindableEvent convert(CArray manualObject, Target t) {
-			throw new ConfigRuntimeException("This operation is not supported.", ExceptionType.BindException, t);
+			throw new CREBindException("This operation is not supported.", t);
 /*			//TODO
 *			String source = manualObject.get("source").val();
 *			String message = manualObject.get("message").val();

@@ -15,9 +15,14 @@ import com.laytonsmith.core.constructs.CVoid;
 import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CREIOException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
+import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
+import com.laytonsmith.core.exceptions.CRE.CRESecurityException;
+import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -58,8 +63,8 @@ public class DynmapIcons {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 	}
 
@@ -77,8 +82,8 @@ public class DynmapIcons {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -90,7 +95,7 @@ public class DynmapIcons {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray iconArray = new CArray(t);
 			for (MCDynmapIcon icon : CHDynmapStatic.getMarkerAPI(t).getIcons()) {
-				iconArray.push(new CString(icon.getId(), t));
+				iconArray.push(new CString(icon.getId(), t), t);
 			}
 			return iconArray;
 		}
@@ -110,8 +115,8 @@ public class DynmapIcons {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.IOException, ExceptionType.SecurityException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CREIOException.class, CRESecurityException.class};
 		}
 
 		@Override
@@ -129,7 +134,7 @@ public class DynmapIcons {
 			CHDynmapStatic.testDynmapIDValidity(iconID, t);
 			//already exists ?
 			if (CHDynmapStatic.getMarkerAPI(t).getIcon(iconID) != null) {
-				throw new ConfigRuntimeException("\"" + iconID + "\" is already an existing icon.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("\"" + iconID + "\" is already an existing icon.", t);
 			}
 			//label and image file
 			String label;
@@ -142,20 +147,20 @@ public class DynmapIcons {
 				file = new File(t.file().getParentFile(), args[2].val());
 			}
 			if (!Security.CheckSecurity(file.getAbsolutePath())) {
-				throw new ConfigRuntimeException("You do not have permission to access the file '" + file.getAbsolutePath() + "'", ExceptionType.SecurityException, t);
+				throw new CRESecurityException("You do not have permission to access the file '" + file.getAbsolutePath() + "'", t);
 			}
 			FileInputStream image;
 			try {
 				image = new FileInputStream(file);
 			} catch (FileNotFoundException exception) {
-				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.IOException, t);
+				throw new CREIOException(exception.getMessage(), t);
 			}
 			//create icon
 			MCDynmapIcon icon = CHDynmapStatic.getMarkerAPI(t).createIcon(iconID, label, image);
 			if (icon != null) {
 				return new CString(icon.getId(), t);
 			} else {
-				throw new ConfigRuntimeException("The icon creation failed.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The icon creation failed.", t);
 			}
 		}
 	}
@@ -174,8 +179,8 @@ public class DynmapIcons {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 
 		@Override
@@ -187,7 +192,7 @@ public class DynmapIcons {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[0].val(), t);
 			if (icon.isBuiltIn()) {
-				throw new ConfigRuntimeException("Builtin icons can't be deleted.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("Builtin icons can't be deleted.", t);
 			} else {
 				icon.delete();
 			}
@@ -228,8 +233,8 @@ public class DynmapIcons {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.IOException, ExceptionType.SecurityException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CREIOException.class, CRESecurityException.class};
 		}
 
 		@Override
@@ -242,13 +247,13 @@ public class DynmapIcons {
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[0].val(), t);
 			File file = new File(t.file().getParentFile(), args[1].val());
 			if (!Security.CheckSecurity(file.getAbsolutePath())) {
-				throw new ConfigRuntimeException("You do not have permission to access the file '" + file.getAbsolutePath() + "'", ExceptionType.SecurityException, t);
+				throw new CRESecurityException("You do not have permission to access the file '" + file.getAbsolutePath() + "'", t);
 			}
 			FileInputStream image;
 			try {
 				image = new FileInputStream(file);
 			} catch (FileNotFoundException exception) {
-				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.IOException, t);
+				throw new CREIOException(exception.getMessage(), t);
 			}
 			icon.setImage(image);
 			return CVoid.VOID;
@@ -288,8 +293,8 @@ public class DynmapIcons {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 
 		@Override

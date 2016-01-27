@@ -12,8 +12,10 @@ import com.hekta.chdynmap.abstraction.MCDynmapMarkerSet;
 import com.hekta.chdynmap.abstraction.MCDynmapPlayerSet;
 import com.hekta.chdynmap.abstraction.MCDynmapPolyLineMarker;
 import com.laytonsmith.core.constructs.Target;
-import com.laytonsmith.core.exceptions.ConfigRuntimeException;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
+import com.laytonsmith.core.exceptions.CRE.CREFormatException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
+import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
 import java.util.regex.Pattern;
 
 /**
@@ -27,7 +29,7 @@ public final class CHDynmapStatic {
 		if (api != null) {
 			return api;
 		} else {
-			throw new ConfigRuntimeException("Needed plugin Dynmap not found.", ExceptionType.InvalidPluginException, t);
+			throw new CREInvalidPluginException("Needed plugin Dynmap not found.", t);
 		}
 	}
 
@@ -35,7 +37,7 @@ public final class CHDynmapStatic {
 		try {
 			return getDynmapAPI(t).getMarkerAPI();
 		} catch (NullPointerException exception) {
-			throw new ConfigRuntimeException("The marker API of Dynmap plugin is not loaded.", ExceptionType.PluginInternalException, t);
+			throw new CREPluginInternalException("The marker API of Dynmap plugin is not loaded.", t);
 		}
 	}
 
@@ -44,7 +46,7 @@ public final class CHDynmapStatic {
 		if (set != null) {
 			return set;
 		} else {
-			throw new ConfigRuntimeException("\"" + setID + "\" is not an existing markerset.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + setID + "\" is not an existing markerset.", t);
 		}
 	}
 
@@ -53,7 +55,7 @@ public final class CHDynmapStatic {
 		if (marker != null) {
 			return marker;
 		} else {
-			throw new ConfigRuntimeException("\"" + markerID + "\" is not an existing marker.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + markerID + "\" is not an existing marker.", t);
 		}
 	}
 
@@ -62,7 +64,7 @@ public final class CHDynmapStatic {
 		if (marker != null) {
 			return marker;
 		} else {
-			throw new ConfigRuntimeException("\"" + markerID + "\" is not an existing area marker.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + markerID + "\" is not an existing area marker.", t);
 		}
 	}
 
@@ -71,7 +73,7 @@ public final class CHDynmapStatic {
 		if (marker != null) {
 			return marker;
 		} else {
-			throw new ConfigRuntimeException("\"" + markerID + "\" is not an existing circle marker.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + markerID + "\" is not an existing circle marker.", t);
 		}
 	}
 
@@ -80,7 +82,7 @@ public final class CHDynmapStatic {
 		if (marker != null) {
 			return marker;
 		} else {
-			throw new ConfigRuntimeException("\"" + markerID + "\" is not an existing icon marker.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + markerID + "\" is not an existing icon marker.", t);
 		}
 	}
 
@@ -89,7 +91,7 @@ public final class CHDynmapStatic {
 		if (marker != null) {
 			return marker;
 		} else {
-			throw new ConfigRuntimeException("\"" + markerID + "\" is not an existing polyline marker.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + markerID + "\" is not an existing polyline marker.", t);
 		}
 	}
 
@@ -98,7 +100,7 @@ public final class CHDynmapStatic {
 		if (icon != null) {
 			return icon;
 		} else {
-			throw new ConfigRuntimeException("\"" + iconID + "\" is not an existing icon.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + iconID + "\" is not an existing icon.", t);
 		}
 	}
 
@@ -107,13 +109,13 @@ public final class CHDynmapStatic {
 		if (set != null) {
 			return set;
 		} else {
-			throw new ConfigRuntimeException("\"" + setID + "\" is not an existing playerset.", ExceptionType.NotFoundException, t);
+			throw new CRENotFoundException("\"" + setID + "\" is not an existing playerset.", t);
 		}
 	}
 
 	public static void testDynmapIDValidity(String ID, Target t) {
 		if (Pattern.matches("[^\\w\\.]", ID)) {
-			throw new ConfigRuntimeException("A setID must only contain numbers, letters, periods (.) and underscores (_).", ExceptionType.FormatException, t);
+			throw new CREFormatException("A setID must only contain numbers, letters, periods (.) and underscores (_).", t);
 		}
 	}
 }

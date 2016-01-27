@@ -30,9 +30,16 @@ import com.laytonsmith.core.constructs.CVoid;
 import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CRECastException;
+import com.laytonsmith.core.exceptions.CRE.CREFormatException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidWorldException;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
+import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
+import com.laytonsmith.core.exceptions.CRE.CRERangeException;
+import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 import java.util.Set;
 
 /**
@@ -71,8 +78,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 	}
 
@@ -84,8 +91,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CRECastException.class};
 		}
 	}
 
@@ -103,8 +110,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -124,28 +131,28 @@ public class DynmapMarkers {
 				try {
 					type = MCDynmapMarkerType.valueOf(args[1].val().toUpperCase());
 				} catch (IllegalArgumentException exception) {
-					throw new ConfigRuntimeException("Invalid marker type: " + args[1].val() + ".", ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("Invalid marker type: " + args[1].val() + ".", t);
 				}
 			}
 			CArray markerArray = new CArray(t);
 			if ((type == null) || (type == MCDynmapMarkerType.AREA)) {
 				for (MCDynmapAreaMarker areaMarker : set.getAreaMarkers()) {
-					markerArray.push(new CString(areaMarker.getId(), t));
+					markerArray.push(new CString(areaMarker.getId(), t), t);
 				}
 			}
 			if ((type == null) || (type == MCDynmapMarkerType.CIRCLE)) {
 				for (MCDynmapCircleMarker circleMarker : set.getCircleMarkers()) {
-					markerArray.push(new CString(circleMarker.getId(), t));
+					markerArray.push(new CString(circleMarker.getId(), t), t);
 				}	
 			}
 			if ((type == null) || (type == MCDynmapMarkerType.ICON)) {
 				for (MCDynmapIconMarker iconMarker : set.getIconMarkers()) {
-					markerArray.push(new CString(iconMarker.getId(), t));
+					markerArray.push(new CString(iconMarker.getId(), t), t);
 				}	
 			}
 			if ((type == null) || (type == MCDynmapMarkerType.POLYLINE)) {
 				for (MCDynmapPolyLineMarker polyLineMarker : set.getPolyLineMarkers()) {
-					markerArray.push(new CString(polyLineMarker.getId(), t));
+					markerArray.push(new CString(polyLineMarker.getId(), t), t);
 				}	
 			}
 			return markerArray;
@@ -166,8 +173,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class, CREInvalidWorldException.class};
 		}
 
 		@Override
@@ -208,7 +215,7 @@ public class DynmapMarkers {
 				try {
 					type = MCDynmapMarkerType.valueOf(optionArray.get("type", t).val().toUpperCase());
 				} catch (IllegalArgumentException exception) {
-					throw new ConfigRuntimeException("Invalid marker type: " + optionArray.get("type", t).val(), ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("Invalid marker type: " + optionArray.get("type", t).val(), t);
 				}
 			}
 			//id
@@ -216,7 +223,7 @@ public class DynmapMarkers {
 			if (keys.contains("id")) {
 				id = optionArray.get("id", t).val();
 				if (set.getMarker(id) != null) {
-					throw new ConfigRuntimeException("\"" + id + "\" is already an existing marker.", ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("\"" + id + "\" is already an existing marker.", t);
 				}
 			} else {
 				id = null;
@@ -226,7 +233,7 @@ public class DynmapMarkers {
 			if (keys.contains("world")) {
 				world = Static.getServer().getWorld(optionArray.get("world", t).val());
 				if (world == null) {
-					throw new ConfigRuntimeException("Unknown world: " + optionArray.get("world", t).val(), ExceptionType.InvalidWorldException, t);
+					throw new CREInvalidWorldException("Unknown world: " + optionArray.get("world", t).val(), t);
 				}
 			} else {
 				world = Static.getServer().getWorlds().get(0);
@@ -270,7 +277,7 @@ public class DynmapMarkers {
 					CArray givenCorners = ArgumentValidation.getArray(optionArray.get("corners", t), t);
 					corners = new MCLocation[(int) givenCorners.size()];
 					if (givenCorners.inAssociativeMode()) {
-						throw new ConfigRuntimeException("The corners array must not be associative.", ExceptionType.CastException, t);
+						throw new CRECastException("The corners array must not be associative.", t);
 					}
 					int i = 0;
 					for (Construct corner : givenCorners.asList()) {
@@ -285,7 +292,7 @@ public class DynmapMarkers {
 					CArray givenCorners = ArgumentValidation.getArray(optionArray.get("corners", t), t);
 					corners = new MCLocation[(int) givenCorners.size()];
 					if (givenCorners.inAssociativeMode()) {
-						throw new ConfigRuntimeException("The corners array must not be associative.", ExceptionType.CastException, t);
+						throw new CRECastException("The corners array must not be associative.", t);
 					}
 					int i = 0;
 					for (Construct corner : givenCorners.asList()) {
@@ -356,7 +363,7 @@ public class DynmapMarkers {
 					break;
 			}
 			if (marker == null) {
-				throw new ConfigRuntimeException("The marker creation failed.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The marker creation failed.", t);
 			}
 			return new CString(marker.getId(), t);
 		}
@@ -376,8 +383,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 
 		@Override
@@ -414,7 +421,7 @@ public class DynmapMarkers {
 				case CIRCLE:
 					return CBoolean.get(((MCDynmapCircleMarker) marker).isBoosted());
 				default:
-					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area or circle markers with this id.", t);
 			}
 		}
 	}
@@ -443,7 +450,7 @@ public class DynmapMarkers {
 					((MCDynmapCircleMarker) marker).setBoosted(ArgumentValidation.getBoolean(args[2], t));
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area or circle markers with this id.", t);
 			}
 			return CVoid.VOID;
 		}
@@ -477,8 +484,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CRECastException.class, CREFormatException.class, CREInvalidWorldException.class};
 		}
 
 		@Override
@@ -519,11 +526,11 @@ public class DynmapMarkers {
 					corners = ((MCDynmapPolyLineMarker) marker).getCorners();
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area or polyline markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area or polyline markers with this id.", t);
 			}
 			CArray cornerArray = new CArray(t);
 			for (MCLocation location : corners) {
-				cornerArray.push(ObjectGenerator.GetGenerator().location(location));
+				cornerArray.push(ObjectGenerator.GetGenerator().location(location), t);
 			}
 			return cornerArray;
 		}
@@ -538,8 +545,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override
@@ -552,7 +559,7 @@ public class DynmapMarkers {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			CArray givenCorners = ArgumentValidation.getArray(args[2], t);
 			if (givenCorners.inAssociativeMode()) {
-				throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
+				throw new CRECastException("The array must not be associative.", t);
 			}
 			MCLocation[] corners = new MCLocation[(int) givenCorners.size()];
 			MCWorld world = marker.getWorld();
@@ -569,7 +576,7 @@ public class DynmapMarkers {
 					((MCDynmapPolyLineMarker) marker).setCorners(corners);
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area or polyline markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area or polyline markers with this id.", t);
 			}
 			return CVoid.VOID;
 		}
@@ -639,7 +646,7 @@ public class DynmapMarkers {
 					fillStyle = ((MCDynmapCircleMarker) marker).getFillStyle();
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area or circle markers with this id.", t);
 			}
 			CArray styleArray = new CArray(t);
 			styleArray.set("color", ObjectGenerator.GetGenerator().color(fillStyle.getColor(), t), t);
@@ -657,8 +664,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override
@@ -681,7 +688,7 @@ public class DynmapMarkers {
 					fillStyle = ((MCDynmapCircleMarker) marker).getFillStyle();
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area or circle markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area or circle markers with this id.", t);
 			}
 			if (keys.contains("color")) {
 				fillStyle.setColor(ObjectGenerator.GetGenerator().color(ArgumentValidation.getArray(styleArray.get("color", t), t), t));
@@ -689,7 +696,7 @@ public class DynmapMarkers {
 			if (keys.contains("opacity")) {
 				double opacity = ArgumentValidation.getDouble(styleArray.get("opacity", t), t);
 				if ((opacity < 0) || (opacity > 1)) {
-					throw new ConfigRuntimeException("Opacity must be between 0 and 1 inclusive.", ExceptionType.RangeException, t);
+					throw new CRERangeException("Opacity must be between 0 and 1 inclusive.", t);
 				} else {
 					fillStyle.setOpacity(opacity);
 				}
@@ -745,7 +752,7 @@ public class DynmapMarkers {
 			if (marker.getSet().iconIsAllowed(icon)) {
 				marker.setIcon(icon);
 			} else {
-				throw new ConfigRuntimeException("The icon is not allowed for the markerset.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The icon is not allowed for the markerset.", t);
 			}
 			return CVoid.VOID;
 		}
@@ -844,7 +851,7 @@ public class DynmapMarkers {
 					lineStyle = ((MCDynmapPolyLineMarker) marker).getLineStyle();
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area, circle or polyline markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area, circle or polyline markers with this id.", t);
 			}
 			CArray styleArray = new CArray(t);
 			styleArray.set("color", ObjectGenerator.GetGenerator().color(lineStyle.getColor(), t), t);
@@ -863,8 +870,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override
@@ -890,7 +897,7 @@ public class DynmapMarkers {
 					lineStyle = ((MCDynmapPolyLineMarker) marker).getLineStyle();
 					break;
 				default:
-					throw new ConfigRuntimeException("There is no existing area, circle or polyline markers with this id.", ExceptionType.NotFoundException, t);
+					throw new CRENotFoundException("There is no existing area, circle or polyline markers with this id.", t);
 			}
 			if (keys.contains("color")) {
 				lineStyle.setColor(ObjectGenerator.GetGenerator().color(ArgumentValidation.getArray(styleArray.get("color", t), t), t));
@@ -898,7 +905,7 @@ public class DynmapMarkers {
 			if (keys.contains("opacity")) {
 				double opacity = ArgumentValidation.getDouble(styleArray.get("opacity", t), t);
 				if ((opacity < 0) || (opacity > 1)) {
-					throw new ConfigRuntimeException("Opacity must be between 0 and 1 inclusive.", ExceptionType.RangeException, t);
+					throw new CRERangeException("Opacity must be between 0 and 1 inclusive.", t);
 				} else {
 					lineStyle.setOpacity(opacity);
 				}
@@ -949,8 +956,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class, CREInvalidWorldException.class};
 		}
 
 		@Override
@@ -984,7 +991,7 @@ public class DynmapMarkers {
 			MCDynmapMarker marker = CHDynmapStatic.getMarker(args[0].val(), args[1].val(), t);
 			MCDynmapMarkerSet newSet = CHDynmapStatic.getMarkerSet(args[2].val(), t);
 			if (newSet.getMarker(marker.getId()) != null) {
-				throw new ConfigRuntimeException("An other marker with the same ID already exists in the new markerset.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("An other marker with the same ID already exists in the new markerset.", t);
 			}
 			marker.setSet(newSet);
 			return CVoid.VOID;
@@ -1061,8 +1068,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override
@@ -1110,8 +1117,8 @@ public class DynmapMarkers {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override

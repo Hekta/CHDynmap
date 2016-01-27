@@ -17,9 +17,15 @@ import com.laytonsmith.core.constructs.CVoid;
 import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CRECastException;
+import com.laytonsmith.core.exceptions.CRE.CREFormatException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CRENotFoundException;
+import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
+import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
+;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -59,8 +65,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class};
 		}
 	}
 
@@ -72,8 +78,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.NotFoundException, ExceptionType.CastException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRENotFoundException.class, CRECastException.class};
 		}
 	}
 
@@ -91,8 +97,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -104,7 +110,7 @@ public class DynmapMarkerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray setArray = new CArray(t);
 			for (MCDynmapMarkerSet set : CHDynmapStatic.getMarkerAPI(t).getMarkerSets()) {
-				setArray.push(new CString(set.getId(), t));
+				setArray.push(new CString(set.getId(), t), t);
 			}
 			return setArray;
 		}
@@ -124,8 +130,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -161,8 +167,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException, ExceptionType.CastException, ExceptionType.FormatException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class, CRECastException.class, CREFormatException.class};
 		}
 
 		@Override
@@ -183,7 +189,7 @@ public class DynmapMarkerSets {
 			CHDynmapStatic.testDynmapIDValidity(setID, t);
 			//already exists ?
 			if (CHDynmapStatic.getMarkerAPI(t).getMarkerSet(setID) != null) {
-				throw new ConfigRuntimeException("\"" + setID + "\" is already an existing markerset.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("\"" + setID + "\" is already an existing markerset.", t);
 			}
 			//create the option array
 			CArray optionArray;
@@ -199,7 +205,7 @@ public class DynmapMarkerSets {
 			if (keys.contains("allowed_icons")) {
 				CArray givenAllowedIcons = Static.getArray(optionArray.get("allowed_icons", t), t);
 				if (givenAllowedIcons.inAssociativeMode()) {
-					throw new ConfigRuntimeException("The array must not be associative.", ExceptionType.CastException, t);
+					throw new CRECastException("The array must not be associative.", t);
 				}
 				allowedIcons = new MCDynmapIcon[(int) givenAllowedIcons.size()];
 				int i = 0;
@@ -227,7 +233,7 @@ public class DynmapMarkerSets {
 			//create marker set
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerAPI(t).createMarkerSet(setID, label, allowedIcons, persistent);
 			if (set == null) {
-				throw new ConfigRuntimeException("The markerset creation failed.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The markerset creation failed.", t);
 			}
 			return new CString(set.getId(), t);
 		}
@@ -247,8 +253,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -284,7 +290,7 @@ public class DynmapMarkerSets {
 			} else {
 				CArray allowedIcons = new CArray(t);
 				for(MCDynmapIcon allowedIcon : iconSet){
-					allowedIcons.push(new CString(allowedIcon.getId(), t));
+					allowedIcons.push(new CString(allowedIcon.getId(), t), t);
 				}
 				return allowedIcons;
 			}
@@ -305,8 +311,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.PluginInternalException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CREPluginInternalException.class};
 		}
 
 		@Override
@@ -318,17 +324,17 @@ public class DynmapMarkerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			if (set.getAllowedIcons() == null) {
-				throw new ConfigRuntimeException("The markerset is not restricted.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The markerset is not restricted.", t);
 			}
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[1].val(), t);
 			if (Static.getBoolean(args[2])) {
 				if (set.iconIsAllowed(icon)) {
-					throw new ConfigRuntimeException("The icon is already allowed for the marketset.", ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("The icon is already allowed for the marketset.", t);
 				}
 				set.addAllowedIcon(icon);	
 			} else {
 				if (!set.iconIsAllowed(icon)) {
-					throw new ConfigRuntimeException("The icon is already not allowed for the marketset.", ExceptionType.PluginInternalException, t);
+					throw new CREPluginInternalException("The icon is already not allowed for the marketset.", t);
 				}
 				set.removeAllowedIcon(icon);
 			}
@@ -373,7 +379,7 @@ public class DynmapMarkerSets {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[1].val(), t);
 			if (!set.iconIsAllowed(icon)) {
-				throw new ConfigRuntimeException("The icon is not allowed for the marketset.", ExceptionType.PluginInternalException, t);
+				throw new CREPluginInternalException("The icon is not allowed for the marketset.", t);
 			}
 			set.setDefaultIcon(icon);
 			return CVoid.VOID;
@@ -436,7 +442,7 @@ public class DynmapMarkerSets {
 		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
 			CArray iconsInUse = new CArray(t);
 			for (MCDynmapIcon icon : CHDynmapStatic.getMarkerSet(args[0].val(), t).getIconsInUse()) {
-				iconsInUse.push(new CString(icon.getId(), t));
+				iconsInUse.push(new CString(icon.getId(), t), t);
 			}
 			return iconsInUse;
 		}
@@ -667,7 +673,7 @@ public class DynmapMarkerSets {
 			} else if (showLabels instanceof CNull) {
 				set.setlabelIsShown(null);
 			} else {
-				throw new ConfigRuntimeException("Value should be a boolean or null.", ExceptionType.CastException, t);
+				throw new CRECastException("Value should be a boolean or null.", t);
 			}
 			return CVoid.VOID;
 		}

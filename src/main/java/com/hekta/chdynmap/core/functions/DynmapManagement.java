@@ -14,9 +14,13 @@ import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.CommandHelperEnvironment;
 import com.laytonsmith.core.environments.Environment;
+import com.laytonsmith.core.exceptions.CRE.CRECastException;
+import com.laytonsmith.core.exceptions.CRE.CREFormatException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidPluginException;
+import com.laytonsmith.core.exceptions.CRE.CREInvalidWorldException;
+import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
-import com.laytonsmith.core.functions.Exceptions.ExceptionType;
 
 /**
  *
@@ -42,8 +46,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -95,8 +99,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -139,8 +143,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -184,8 +188,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -228,8 +232,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -273,8 +277,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
@@ -318,8 +322,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CRECastException.class, CREFormatException.class, CREInvalidWorldException.class};
 		}
 
 		@Override
@@ -370,8 +374,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException, ExceptionType.CastException, ExceptionType.FormatException, ExceptionType.InvalidWorldException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class, CRECastException.class, CREFormatException.class, CREInvalidWorldException.class};
 		}
 
 		@Override
@@ -407,7 +411,7 @@ public class DynmapManagement {
 			try {
 				CHDynmapStatic.getDynmapAPI(t).triggerRenderOfVolume(ObjectGenerator.GetGenerator().location(args[0], world, t), ObjectGenerator.GetGenerator().location(args[1], world, t));
 			} catch (IllegalArgumentException exception) {
-				throw new ConfigRuntimeException(exception.getMessage(), ExceptionType.FormatException, t);
+				throw new CREFormatException(exception.getMessage(), t);
 			}
 			return CVoid.VOID;
 		}
@@ -427,8 +431,8 @@ public class DynmapManagement {
 		}
 
 		@Override
-		public ExceptionType[] thrown() {
-			return new ExceptionType[]{ExceptionType.InvalidPluginException};
+		public Class<? extends CREThrowable>[] thrown() {
+			return new Class[]{CREInvalidPluginException.class};
 		}
 
 		@Override
