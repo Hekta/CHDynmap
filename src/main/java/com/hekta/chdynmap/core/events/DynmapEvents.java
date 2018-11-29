@@ -3,11 +3,10 @@ package com.hekta.chdynmap.core.events;
 import com.hekta.chdynmap.abstraction.events.MCDynmapWebChatEvent;
 import com.laytonsmith.PureUtilities.Version;
 import com.laytonsmith.annotations.api;
-import com.laytonsmith.core.CHVersion;
+import com.laytonsmith.core.MSVersion;
 import com.laytonsmith.core.constructs.CArray;
 import com.laytonsmith.core.constructs.CBoolean;
 import com.laytonsmith.core.constructs.CString;
-import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.events.AbstractEvent;
 import com.laytonsmith.core.events.BindableEvent;
@@ -17,6 +16,8 @@ import com.laytonsmith.core.events.Prefilters.PrefilterType;
 import com.laytonsmith.core.exceptions.CRE.CREBindException;
 import com.laytonsmith.core.exceptions.EventException;
 import com.laytonsmith.core.exceptions.PrefilterNonMatchException;
+import com.laytonsmith.core.natives.interfaces.Mixed;
+
 import java.util.Map;
 
 /**
@@ -55,7 +56,7 @@ public class DynmapEvents {
 */		}
 
 		@Override
-		public boolean modifyEvent(String key, Construct value, BindableEvent event) {
+		public boolean modifyEvent(String key, Mixed value, BindableEvent event) {
 			return false;
 		}
 
@@ -70,11 +71,11 @@ public class DynmapEvents {
 
 		@Override
 		public Version since() {
-			return CHVersion.V3_3_1;
+			return MSVersion.V3_3_1;
 		}
 
 		@Override
-		public boolean matches(Map<String, Construct> prefilter, BindableEvent event) throws PrefilterNonMatchException {
+		public boolean matches(Map<String, Mixed> prefilter, BindableEvent event) throws PrefilterNonMatchException {
 			if (event instanceof MCDynmapWebChatEvent) {
 				MCDynmapWebChatEvent wce = (MCDynmapWebChatEvent) event;
 				Prefilters.match(prefilter, "source", wce.getSource(), PrefilterType.MACRO);
@@ -87,9 +88,9 @@ public class DynmapEvents {
 		}
 
 		@Override
-		public Map<String, Construct> evaluate(BindableEvent event) throws EventException {
+		public Map<String, Mixed> evaluate(BindableEvent event) throws EventException {
 			if (event instanceof MCDynmapWebChatEvent) {
-				Map<String, Construct> eventMap = evaluate_helper(event);
+				Map<String, Mixed> eventMap = evaluate_helper(event);
 				MCDynmapWebChatEvent wce = (MCDynmapWebChatEvent) event;
 				eventMap.put("source", new CString(wce.getSource(), Target.UNKNOWN));
 				eventMap.put("name", new CString(wce.getName(), Target.UNKNOWN));

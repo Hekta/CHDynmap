@@ -4,7 +4,7 @@
 
 	<groupId>com.hekta</groupId>
 	<artifactId>CHDynmap</artifactId>
-	<version>1.1.3</version>
+	<version>1.1.4</version>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -20,8 +20,8 @@
 			<url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
 		</repository>
 		<repository>
-			<id>sk89q-mvn2</id>
-			<url>http://mvn2.sk89q.com/repo</url>
+			<id>sk89q-repo</id>
+			<url>http://maven.sk89q.com/repo</url>
 		</repository>
 	</repositories>
 
@@ -29,17 +29,17 @@
 		<dependency>
 			<groupId>org.bukkit</groupId>
 			<artifactId>bukkit</artifactId>
-			<version>1.8-R0.1-SNAPSHOT</version>
+			<version>1.13.2-R0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sk89q</groupId>
 			<artifactId>commandhelper</artifactId>
-			<version>3.3.2-SNAPSHOT</version>
+			<version>3.3.4-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>us.dynmap</groupId>
 			<artifactId>dynmap-api</artifactId>
-			<version>2.2-SNAPSHOT</version>
+			<version>3.0-SNAPSHOT</version>
 		</dependency>
 	</dependencies>
 
@@ -49,11 +49,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
+				<version>3.7.0</version>
 				<configuration>
 					<showDeprecation>true</showDeprecation>
-					<source>1.7</source>
-					<target>1.7</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 

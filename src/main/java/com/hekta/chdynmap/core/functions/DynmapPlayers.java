@@ -6,11 +6,10 @@ import com.laytonsmith.abstraction.MCOfflinePlayer;
 import com.laytonsmith.abstraction.MCPlayer;
 import com.laytonsmith.annotations.api;
 import com.laytonsmith.core.ArgumentValidation;
-import com.laytonsmith.core.CHVersion;
+import com.laytonsmith.core.MSVersion;
 import com.laytonsmith.core.Static;
 import com.laytonsmith.core.constructs.CBoolean;
 import com.laytonsmith.core.constructs.CVoid;
-import com.laytonsmith.core.constructs.Construct;
 import com.laytonsmith.core.constructs.Target;
 import com.laytonsmith.core.environments.CommandHelperEnvironment;
 import com.laytonsmith.core.environments.Environment;
@@ -19,6 +18,7 @@ import com.laytonsmith.core.exceptions.CRE.CREPlayerOfflineException;
 import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
+import com.laytonsmith.core.natives.interfaces.Mixed;
 
 /**
  *
@@ -44,7 +44,7 @@ public class DynmapPlayers {
 
 		@Override
 		public Version since() {
-			return CHVersion.V3_3_1;
+			return MSVersion.V3_3_1;
 		}
 	}
 
@@ -76,7 +76,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			if (args.length == 0) {
 				MCPlayer psender = environment.getEnv(CommandHelperEnvironment.class).GetPlayer();
@@ -117,7 +117,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			boolean isVisible;
 			if (args.length == 1) {
@@ -163,7 +163,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			boolean isVisible;
 			String plugin;
@@ -216,7 +216,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			boolean isInvisible;
 			String plugin;
@@ -258,7 +258,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			MCOfflinePlayer otherPlayer;
 			if (args.length == 1) {
@@ -302,7 +302,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			String displayName;
 			String message;
@@ -350,7 +350,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			String displayName;
 			if (args.length == 0) {
@@ -391,7 +391,7 @@ public class DynmapPlayers {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCOfflinePlayer player;
 			String displayName;
 			if (args.length == 0) {

@@ -5,17 +5,10 @@ import com.hekta.chdynmap.abstraction.MCDynmapMarkerSet;
 import com.hekta.chdynmap.core.CHDynmapStatic;
 import com.laytonsmith.PureUtilities.Version;
 import com.laytonsmith.annotations.api;
-import com.laytonsmith.core.CHVersion;
+import com.laytonsmith.core.MSVersion;
 import com.laytonsmith.core.Optimizable;
 import com.laytonsmith.core.Static;
-import com.laytonsmith.core.constructs.CArray;
-import com.laytonsmith.core.constructs.CBoolean;
-import com.laytonsmith.core.constructs.CInt;
-import com.laytonsmith.core.constructs.CNull;
-import com.laytonsmith.core.constructs.CString;
-import com.laytonsmith.core.constructs.CVoid;
-import com.laytonsmith.core.constructs.Construct;
-import com.laytonsmith.core.constructs.Target;
+import com.laytonsmith.core.constructs.*;
 import com.laytonsmith.core.environments.Environment;
 import com.laytonsmith.core.exceptions.CRE.CRECastException;
 import com.laytonsmith.core.exceptions.CRE.CREFormatException;
@@ -25,6 +18,7 @@ import com.laytonsmith.core.exceptions.CRE.CREPluginInternalException;
 import com.laytonsmith.core.exceptions.CRE.CREThrowable;
 import com.laytonsmith.core.exceptions.ConfigRuntimeException;
 import com.laytonsmith.core.functions.AbstractFunction;
+import com.laytonsmith.core.natives.interfaces.Mixed;
 ;
 import java.util.EnumSet;
 import java.util.Set;
@@ -53,7 +47,7 @@ public class DynmapMarkerSets {
 
 		@Override
 		public Version since() {
-			return CHVersion.V3_3_1;
+			return MSVersion.V3_3_1;
 		}
 	}
 
@@ -107,7 +101,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CArray setArray = new CArray(t);
 			for (MCDynmapMarkerSet set : CHDynmapStatic.getMarkerAPI(t).getMarkerSets()) {
 				setArray.push(new CString(set.getId(), t), t);
@@ -140,7 +134,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarkerAPI(t).getDefaultMarkerSetID(), t);
 		}
 
@@ -183,7 +177,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			String setID = args[0].val();
 			//is the id valid ?
 			CHDynmapStatic.testDynmapIDValidity(setID, t);
@@ -209,7 +203,7 @@ public class DynmapMarkerSets {
 				}
 				allowedIcons = new MCDynmapIcon[(int) givenAllowedIcons.size()];
 				int i = 0;
-				for (Construct icon : givenAllowedIcons.asList()) {
+				for (Mixed icon : givenAllowedIcons.asList()) {
 					allowedIcons[i] = CHDynmapStatic.getIcon(icon.val(), t);
 					i++;
 				}
@@ -226,7 +220,7 @@ public class DynmapMarkerSets {
 			//persistent
 			boolean persistent;
 			if (keys.contains("persistent")) {
-				persistent = Static.getBoolean(optionArray.get("persistent", t));
+				persistent = Static.getBoolean(optionArray.get("persistent", t), t);
 			} else {
 				persistent = false;
 			}
@@ -263,7 +257,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).delete();
 			return CVoid.VOID;
 		}
@@ -283,7 +277,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCDynmapIcon[] iconSet = CHDynmapStatic.getMarkerSet(args[0].val(), t).getAllowedIcons();
 			if (iconSet == null) {
 				return CNull.NULL;
@@ -321,13 +315,13 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			if (set.getAllowedIcons() == null) {
 				throw new CREPluginInternalException("The markerset is not restricted.", t);
 			}
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[1].val(), t);
-			if (Static.getBoolean(args[2])) {
+			if (Static.getBoolean(args[2], t)) {
 				if (set.iconIsAllowed(icon)) {
 					throw new CREPluginInternalException("The icon is already allowed for the marketset.", t);
 				}
@@ -356,7 +350,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarkerSet(args[0].val(), t).getDefaultIcon().getId(), t);
 		}
 	}
@@ -375,7 +369,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			MCDynmapIcon icon = CHDynmapStatic.getIcon(args[1].val(), t);
 			if (!set.iconIsAllowed(icon)) {
@@ -400,7 +394,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return CBoolean.get(CHDynmapStatic.getMarkerSet(args[0].val(), t).isHiddenByDefault());
 		}
 	}
@@ -419,8 +413,8 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
-			CHDynmapStatic.getMarkerSet(args[0].val(), t).setHiddenByDefault(Static.getBoolean(args[1]));
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
+			CHDynmapStatic.getMarkerSet(args[0].val(), t).setHiddenByDefault(Static.getBoolean(args[1], t));
 			return CVoid.VOID;
 		}
 	}
@@ -439,7 +433,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CArray iconsInUse = new CArray(t);
 			for (MCDynmapIcon icon : CHDynmapStatic.getMarkerSet(args[0].val(), t).getIconsInUse()) {
 				iconsInUse.push(new CString(icon.getId(), t), t);
@@ -462,7 +456,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return new CString(CHDynmapStatic.getMarkerSet(args[0].val(), t).getLabel(), t);
 		}
 	}
@@ -481,7 +475,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setLabel(args[1].val());
 			return CVoid.VOID;
 		}
@@ -501,7 +495,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return new CInt(CHDynmapStatic.getMarkerSet(args[0].val(), t).getLayerPriority(), t);
 		}
 	}
@@ -520,7 +514,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setLayerPriority(Static.getInt32(args[1], t));
 			return CVoid.VOID;
 		}
@@ -541,7 +535,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return new CInt(CHDynmapStatic.getMarkerSet(args[0].val(), t).getMinZoom(), t);
 		}
 	}
@@ -561,7 +555,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setMinZoom(Static.getInt32(args[1], t));
 			return CVoid.VOID;
 		}
@@ -582,7 +576,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return new CInt(CHDynmapStatic.getMarkerSet(args[0].val(), t).getMaxZoom(), t);
 		}
 	}
@@ -602,7 +596,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			CHDynmapStatic.getMarkerSet(args[0].val(), t).setMaxZoom(Static.getInt32(args[1], t));
 			return CVoid.VOID;
 		}
@@ -622,7 +616,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			return CBoolean.get(CHDynmapStatic.getMarkerSet(args[0].val(), t).isPersistent());
 		}
 	}
@@ -641,7 +635,7 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			if (set.labelIsShown() == null) {
 				return CNull.NULL;
@@ -665,11 +659,11 @@ public class DynmapMarkerSets {
 		}
 
 		@Override
-		public Construct exec(Target t, Environment environment, Construct... args) throws ConfigRuntimeException {
+		public Mixed exec(Target t, Environment environment, Mixed... args) throws ConfigRuntimeException {
 			MCDynmapMarkerSet set = CHDynmapStatic.getMarkerSet(args[0].val(), t);
 			Construct showLabels = Static.resolveConstruct(args[1].val(), t);
 			if (showLabels instanceof CBoolean) {
-				set.setlabelIsShown(Static.getBoolean(showLabels));
+				set.setlabelIsShown(Static.getBoolean(showLabels, t));
 			} else if (showLabels instanceof CNull) {
 				set.setlabelIsShown(null);
 			} else {
